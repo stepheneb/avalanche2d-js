@@ -17,8 +17,10 @@ body {
 }
 
 pre {
-  font-size: 60%;
+  margin: 10px 5px 10px 5px;
+  font-size: 80%;
   line-height: 1.1em;
+  overflow: auto;
 }
 
 /* http://stackoverflow.com/questions/7615009/disable-interpolation-when-scaling-a-canvas */

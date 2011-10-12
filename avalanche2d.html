@@ -181,7 +181,7 @@
       choose_array_type.onchange = arrayTypeChange;
       choose_array_type.onchange();
 
-      var folder_data_div = document.getElementById("folder-data");
+      var folder_data = document.getElementById("folder-data");
 
       var step_model = document.getElementById("step-model");
       
@@ -214,7 +214,7 @@
             sprintf(", rate: %3.1f (avalanches/s)", 1/average_sample_time_ms * 1000) +
             sprintf(", folders: %1.2f (ave)", model.averageFolders);
           if (show_visualization.checked) avalanche2d.displayFolderCanvas(canvas, model);
-          if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data_div, model);
+          if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
       }
       
       window.paintInterval;
@@ -253,6 +253,16 @@
       step_model.onchange = runModelStep;
       avalanche2d.displayFolderCanvas(canvas, model);
       step_count.innerHTML = 'frame: ' + model.indexOfStep;
+      
+      function displayFolderTable() {
+        if (show_data_table.checked) {
+          avalanche2d.displayFolderTable(folder_data, model);
+        } else {
+          folder_data.innerHTML = '';
+        };
+      }
+      
+      show_data_table.onchange = displayFolderTable;
       
     });
   };

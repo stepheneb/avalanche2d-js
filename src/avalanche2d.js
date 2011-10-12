@@ -518,9 +518,11 @@ avalanche2d.displayFolderTable = function(destination, model) {
     var rows = model.ny;
     var ycols, ycols_plus_x;
     var folder_count;
-    var tableStr = "";
+    var tableStr = "    ";
+    for (y = 0; y < rows; y++) tableStr += sprintf("%2.0f ", y);
     for (y = 0; y < rows; y++) {
         ycols = y * rows;
+        tableStr += sprintf("%2.0f: ", y);
         for (x = 0; x < columns; x++) {
             ycols_plus_x = ycols + x;
             folder_count = model.folder[ycols_plus_x];
