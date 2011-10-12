@@ -107,8 +107,8 @@
               <fieldset>
                 <legend>Select Type of JavaScript Arrays: </legend>
                 <form id="choose-array-type">
-                  <label><input type="radio" name="array" value="regular" disabled> Regular</input></label>
-                  <label><input type="radio" name="array" value="typed" checked> Typed</input></label>
+                  <label><input type="radio" name="array" value="regular"> Regular</input></label>
+                  <label><input type="radio" name="array" value="typed" disabled> Typed</input></label>
                 </form>
               </fieldset>
             </li>
@@ -162,7 +162,12 @@
 
       if (webgl) {
         choose_array_type.elements[1].disabled = false;
-      }
+        choose_array_type.elements[1].checked = true;
+      } else {
+        choose_array_type.elements[1].disabled = true;
+        choose_array_type.elements[0].checked = true;
+        
+      };
 
       // avalanche2d.setupColorDivs();
       avalanche2d.setupRGBAColorTables();
@@ -234,12 +239,14 @@
           case "step":
             window.clearInterval(window.paintInterval);
             renderModelStep();
-            this.elements[0].checked = true;
+            this.elements[1].checked = true;
+            this.elements[2].checked = false;
             break;
           case "stop":
             if (window.paintInterval) {
               window.clearInterval(paintInterval);
-            }
+            };
+            avalanche2d.displayFolderCanvas(canvas, model);
             break;
           case "reset":
             if (window.paintInterval) {
