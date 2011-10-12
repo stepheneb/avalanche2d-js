@@ -16,6 +16,11 @@ body {
     background-color: #d4e0eb;
 }
 
+pre {
+  font-size: 60%;
+  line-height: 1.1em;
+}
+
 /* http://stackoverflow.com/questions/7615009/disable-interpolation-when-scaling-a-canvas */
 canvas {
   image-rendering: optimizeSpeed;
@@ -127,8 +132,8 @@ h4 {
 
 #container {
     position: relative;
-    width: 1600px !important;
-    min-width: 1600px !important; /*padding: 10px 10px 10px 50px;*/
+    width: 1200px !important;
+    min-width: 1200px !important; /*padding: 10px 10px 10px 50px;*/
     margin: 0 auto;
     border: 0;
     clear: both;
