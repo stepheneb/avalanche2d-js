@@ -216,12 +216,18 @@
           average_sample_time_ms = (average_sample_time_ms * 1.75 + (last_sample_time - one_before_that_sample_time) * 0.25) / 2;
           one_before_that_sample_time = last_sample_time;
           last_sample_time = sample_time;
-          step_count.innerHTML = 'avalanches: ' + model.indexOfStep + 
-            sprintf(", rate: %3.1f (avalanches/s)", 1/average_sample_time_ms * 1000) +
-            sprintf(", folders: %1.2f (ave)", model.averageFolders);
-          if (show_visualization.checked) avalanche2d.displayFolderCanvas(canvas, model);
+          if (show_visualization.checked) {
+            avalanche2d.displayFolderCanvas(canvas, model);
+            displayStats();
+          }
           if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
-      }
+      };
+
+      function displayStats() {
+        step_count.innerHTML = 'avalanches: ' + model.indexOfStep + 
+          sprintf(", rate: %3.1f (avalanches/s)", 1/average_sample_time_ms * 1000) +
+          sprintf(", folders: %1.2f (ave)", model.averageFolders);
+      };
       
       window.paintInterval;
 
@@ -232,8 +238,12 @@
             if (this.elements[i].checked) run_mode = this.elements[i].value;
 
         switch(run_mode) {
-          case "go":
-            paintInterval = setInterval("renderModelStep()", 0);
+          case "stop":
+            if (window.paintInterval) {
+              window.clearInterval(paintInterval);
+            };
+            avalanche2d.displayFolderCanvas(canvas, model);
+            displayStats();
             break;
           case "step":
             window.clearInterval(window.paintInterval);
@@ -241,11 +251,8 @@
             this.elements[1].checked = true;
             this.elements[2].checked = false;
             break;
-          case "stop":
-            if (window.paintInterval) {
-              window.clearInterval(paintInterval);
-            };
-            avalanche2d.displayFolderCanvas(canvas, model);
+          case "go":
+            paintInterval = setInterval("renderModelStep()", 0);
             break;
           case "reset":
             if (window.paintInterval) {
