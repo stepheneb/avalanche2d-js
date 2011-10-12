@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Avalanche-JS Demo</title>
+    <link href="stylesheets/style.css" rel="stylesheet" type="text/css"/>
+    <script src="lib/sprintf.js" type="text/javascript" ></script>
+    <script src="src/grapher.js" type="text/javascript" ></script>
+    <script src="lib/d3/d3.js" type="text/javascript" ></script>
+    <style type="text/css">
+      #patchesCanvas { 
+        width:400px;
+        height:400px;
+        padding:0px;
+        background-color:lightgray;
+        color:gray;
+        border:1px;
+      }
+
+    </style>
+
+    <script type="text/javascript">
+      // a simple JavaScript source code loader
+      function myRequire(src, callback){
+        if (src.constructor == Array) {
+          var libraries = src;
+        } else {
+          var libraries = [src];
+        }
+        var script = document.createElement("script") 
+        script.type = "text/javascript";
+        // IE
+        script.onreadystatechange = function () {
+          if (script.readyState === 'loaded' || script.readyState == 'complete') {
+            script.onreadystatechange = null;
+            libraries.shift();
+            if (libraries.length > 0) {
+              myRequire(libraries)
+            }
+            if (callback) {
+              callback();            
+            }
+          }
+        }
+        // Not IE
+        script.onload = function () {
+          libraries.shift();
+          if (libraries.length > 0) {
+            myRequire(libraries)
+          }
+          if (callback) {
+            callback();            
+          }
+        }
+        script.src = libraries[0];
+        document.getElementsByTagName("head")[0].appendChild(script);
+      };
+    </script>
+</head>
+<div id="container">
+  <div id="header-inner">
+    <h1 id="title">Avalanche-JS Demo</h1>
+    <p>
+      A partial JavaScript port of Bob Tinker's NetLogo model exploring Self-Organised Criticality: Bureaucrats.v6
+    <p>
+    <blockquote>
+      The mathematics of avalanche size and frequency follows a power law that can be simulated to
+      a first approximation by any system that exhibits self-organized criticality (SOC). In "How
+      Nature Works"" Per Bak reports a simplified model of a sandpile that he, Chao Tang, and Curt
+      Wiesenfeld developed that shows SOC, the so-called BTW model. Bak also mentions that
+      Grassberger describes a representation of this model that is fanciful but equivalent to the
+      BTW model. Imagine an N-by-N grid of office desks and a bureaucrat sitting at each. A folder
+      is randomly assigned to one desk. The bureaucrat does nothing until four or more folders are
+      on his desk at which time he sends one to each of his four nearest neighbors. Any bureaucrat
+      sitting at the edge of this array throws a folder out the window if there is no desk to send
+      it to. Sometimes, adding one folder can cause multiple redistributions of folders as one
+      bureaucrat's actions causes neighbors to exceed three folders, which then ripples through
+      the office. In principle, just adding one new folder might involve redistribution at every
+      desk, sometimes multiple times.
+    </blockquote>
+  </div>
+  <div id="content">
+    <div id="webglCanvasContainer">
+      <ul class="hlist">
+        <li>
+          <p>Avalanche-JS Model: Rendered using an HTML5 canvas</p>
+          <canvas id="patchesCanvas"></canvas>
+          <ul class="hlist">
+            <li>
+              <form id="step-model">
+                <fieldset>
+                  <legend>Step: </legend>
+                  <label><input type="radio" name="step" value="stop" checked> Stop</input></label>
+                  <label><input type="radio" name="step" value="step"> Step</input></label>
+                  <label><input type="radio" name="step" value="go"> Go</input></label>
+                  <!-- <label><input type="radio" name="step" value="reset"> Reset</input></label> -->
+                </fieldset>
+              </form>
+            </li>
+          </ul>
+          <ul class="hlist">
+            <li>
+              <fieldset>
+                <legend>Select Type of JavaScript Arrays: </legend>
+                <form id="choose-array-type">
+                  <label><input type="radio" name="array" value="regular" disabled> Regular</input></label>
+                  <label><input type="radio" name="array" value="typed" checked> Typed</input></label>
+                </form>
+              </fieldset>
+            </li>
+            <li>
+              <form id="show-me">
+                <fieldset>
+                  <legend>Select Rendering</legend>
+                  <label><input id="show-visualization" type="checkbox" checked/> Visualization</label>
+                  <label><input id="show-data-table" type="checkbox"/> Folder-Desk Array</label>
+                </fieldset>
+              </form>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <p>Average Number of folders on a desk</p>
+          <div id='chart'></div>
+        </li>
+      </ul>
+    </div>
+    <h2 id="step-count">frame 0</h2>
+    <div id="info">
+      <h2>Getting a browser that supports JavaScript Typed Arrays</h2>
+      <div id="getting-webgl">
+        <p>
+          <a href=" https://developer.mozilla.org/en/JavaScript_typed_arrays">JavaScript Typed Arrays</a> are 
+          available in browsers that are <a href='http://learningwebgl.com/blog/?p=11'>WebGL-enabled</a>. 
+          On some browsers using JavaScript Typed Arrays will speed up the modeling part of the simulation by a
+          factor of two. Get more information about whether your browser supports WebGL here: 
+          <a href="http://get.webgl.org/">http://get.webgl.org/</a>.
+        </p>
+    </div>
+    <h2>Folder-Desk Data Array:</h2>
+    <pre id="folder-data" style="font-size:20%"></pre>
+  </div>
+</div>
+<script type="text/javascript">
+
+  window.onload=function() {
+    myRequire([ 'src/avalanche2d.js' ],
+    
+    function() {
+
+      var webgl = !!window.WebGLRenderingContext;
+      var choose_array_type = document.getElementById("choose-array-type");
+
+      if (webgl) {
+        choose_array_type.elements[1].disabled = false;
+      }
+
+      // avalanche2d.setupColorDivs();
+      avalanche2d.setupRGBAColorTables();
+      
+      var model, array_selection;
+      
+      function arrayTypeChange() {
+        if (choose_array_type.elements[0].checked) {
+          array_selection = "regular";
+        } else {
+          array_selection = "typed";
+        }
+        model = new avalanche2d.Model({ model: { nx: 125, ny: 125, initial_value: 2 }}, array_selection);
+        model.nextStep();
+      };
+      
+      choose_array_type.onchange = arrayTypeChange;
+      choose_array_type.onchange();
+
+      var folder_data_div = document.getElementById("folder-data");
+
+      var step_model = document.getElementById("step-model");
+      
+      var show_visualization = document.getElementById("show-visualization");
+      var show_data_table = document.getElementById("show-data-table");
+      
+      var step_count = document.getElementById("step-count");
+
+      var canvas = document.getElementById("patchesCanvas");
+      var run_mode;
+
+      var one_before_that_sample_time = new Date();
+      var last_sample_time = new Date();
+      var sample_time = new Date();
+      var average_sample_time_ms = sample_time - last_sample_time;
+      var foldersRunningAverage;
+      
+      var graph_data = [2];
+      // var graph = grapher.sampleGraph(graph_data);
+
+      window.renderModelStep = function() {
+          sample_time = new Date();
+          model.nextStep();
+          graph_data.push(model.averageFolders);
+          // graph.indexedData(graph_data, 0);
+          average_sample_time_ms = (average_sample_time_ms * 1.75 + (last_sample_time - one_before_that_sample_time) * 0.25) / 2;
+          one_before_that_sample_time = last_sample_time;
+          last_sample_time = sample_time;
+          step_count.innerHTML = 'avalanches: ' + model.indexOfStep + 
+            sprintf(", rate: %3.1f (avalanches/s)", 1/average_sample_time_ms * 1000) +
+            sprintf(", folders: %1.2f (ave)", model.averageFolders);
+          if (show_visualization.checked) avalanche2d.displayFolderCanvas(canvas, model);
+          if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data_div, model);
+      }
+      
+      window.paintInterval;
+
+      var display_method;
+      
+      function runModelStep() {
+        for(var i = 0; i < this.elements.length; i++)
+            if (this.elements[i].checked) run_mode = this.elements[i].value;
+
+        switch(run_mode) {
+          case "go":
+            paintInterval = setInterval("renderModelStep()", 0);
+            break;
+          case "step":
+            window.clearInterval(window.paintInterval);
+            renderModelStep();
+            this.elements[0].checked = true;
+            break;
+          case "stop":
+            if (window.paintInterval) {
+              window.clearInterval(paintInterval);
+            }
+            break;
+          case "reset":
+            if (window.paintInterval) {
+              window.clearInterval(paintInterval);
+            }
+            model = new avalanche2d.Model({}, array_selection);
+            model.nextStep();
+            renderModelStep;
+            break;
+        }
+      }
+      
+      step_model.onchange = runModelStep;
+      avalanche2d.displayFolderCanvas(canvas, model);
+      step_count.innerHTML = 'frame: ' + model.indexOfStep;
+      
+    });
+  };
+</script>
+</body>
+</html>

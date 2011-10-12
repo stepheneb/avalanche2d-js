@@ -1,0 +1,24 @@
+h1. Avalanche2D-JS
+
+A partial JavaScript port of Bob Tinker's NetLogo model exploring Self-Organised Criticality: Bureaucrats.v6
+
+bq. The mathematics of avalanche size and frequency follows a power law that can be simulated to
+    a first approximation by any system that exhibits self-organized criticality (SOC). In "How
+    Nature Works"" Per Bak reports a simplified model of a sandpile that he, Chao Tang, and Curt
+    Wiesenfeld developed that shows SOC, the so-called BTW model. Bak also mentions that
+    Grassberger describes a representation of this model that is fanciful but equivalent to the
+    BTW model. Imagine an N-by-N grid of office desks and a bureaucrat sitting at each. A folder
+    is randomly assigned to one desk. The bureaucrat does nothing until four or more folders are
+    on his desk at which time he sends one to each of his four nearest neighbors. Any bureaucrat
+    sitting at the edge of this array throws a folder out the window if there is no desk to send
+    it to. Sometimes, adding one folder can cause multiple redistributions of folders as one
+    bureaucrat's actions causes neighbors to exceed three folders, which then ripples through
+    the office. In principle, just adding one new folder might involve redistribution at every
+    desk, sometimes multiple times.
+
+h2. References
+
+- "Review of: How Nature Works: The Science of Self-Organised Criticality, Per Bak, New York, NY: Copernicus Press 1996":http://jasss.soc.surrey.ac.uk/4/4/reviews/bak.html
+- "Self organized criticality in earth systems By Stefan Hergarten, page 94":http://books.google.com/books?id=eBZbupdVnYAC&pg=PA94&lpg=PA94&dq=Grassberger++bureaucrat&source=bl&ots=XR7W1E61Wa&sig=06HmPg4d9YyBUz63RIphjUza1ik&hl=en&ei=MxGVTvThPIjk0QG4npnGBw&sa=X&oi=book_result&ct=result&resnum=1&ved=0CBoQ6AEwAA#v=onepage&q=Grassberger%20%20bureaucrat&f=false
+- "On the avalanche size distribution in the BTW model":http://www.cmth.ph.ic.ac.uk/people/k.christensen/papers/preprints/preprint_btw.pdf
+- "Wikipedia: Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
