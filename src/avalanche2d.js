@@ -312,18 +312,20 @@ avalanche2d.FolderSolver2D.prototype.finish_with_brute_force = function() {
     this.cells_to_process = [];
     this.new_cells_to_process = [];
     
+    var avalanche = true;
     var new_avalanche = true;
 
     var row_index = 0;
-    while (new_avalanche) {
-        new_avalanche = false;
+    while (avalanche) {
+        avalanche = false;
         for (ypos = 0; ypos < ny; ypos++) {
             for (xpos = 0; xpos < nx; xpos++) {
                 index = row_index + xpos;
                 folder_count = folder[index];
                 if (folder_count > 3) {
                     folder[index] = folder_count - 4;
-                    new_avalanche = new_avalanche || this.distributeFolders(xpos, ypos, index)
+                    new_avalanche = this.distributeFolders(xpos, ypos, index);
+                    avalanche = avalanche || new_avalanche;
                     this.new_cells_to_process = [];
                 }
             };
