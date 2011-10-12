@@ -35,33 +35,27 @@ avalanche2d.config = {
 
 avalanche2d.Model = function(options, array_type) {
 
-    if (!options || options === {}) {
-        options = avalanche2d.config;
-    };
-
-    if (!options.model) {
-        options.model = {};
-    };
-
     if (!array_type) {
         array_type = "regular";
     };
     avalanche2d.array_type = array_type;
+
+    if (!options || options === {}) {
+        this.options = avalanche2d.config;
+    } else {
+        this.options = options;
+    }
+
+    if (!this.options.model) {
+        this.options.model = {};
+    };
 
     this.nx = options.model.nx;
     this.ny = options.model.ny;
     
     this.ARRAY_SIZE = this.nx * this.ny;
 
-    this.indexOfStep = 0;
-
-    // folder array
-    this.folder = createArray(this.ARRAY_SIZE, options.model.initial_value)
-
-    this.averageFolders = options.model.initial_value;
-    
-    this.folderSolver = new avalanche2d.FolderSolver2D(this);
-
+    this.reset();
 };
 
 avalanche2d.Model.prototype.random_cell = function() {
@@ -69,33 +63,13 @@ avalanche2d.Model.prototype.random_cell = function() {
 };
 
 avalanche2d.Model.prototype.reset = function() {
-    var array_size = this.ARRAY_SIZE;
-    for (i = 0; i < array_size; i++) {
-        
-        for (i = 0; i < this.ARRAY_SIZE; i++) {
-            this.t[i] = this.backgroundTemperature;
-            this.tb[i] = NaN;
-        }
+    this.indexOfStep = 0;
 
-        // velocity x-component array (m/s)
-        this.u[i] = 0;
+    this.folder = createArray(this.ARRAY_SIZE, this.options.model.initial_value)
 
-        // velocity y-component array (m/s)
-        this.v[i] = 0;
-
-        // internal heat generation array
-        this.q[i] = 0;
-
-        // wind speed
-        this.uWind[i] = 0;
-        this.vWind[i] = 0;
-        
-        this.u0[i] = 0;
-        this.v0[i] = 0;
-
-        this.vorticity[i] = 0;
-        this.stream[i] = 0;
-    }
+    this.averageFolders = this.options.model.initial_value;
+    
+    this.folderSolver = new avalanche2d.FolderSolver2D(this);
 };
 
 

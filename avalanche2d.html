@@ -96,6 +96,7 @@
                   <label><input type="radio" name="step" value="stop" checked> Stop</input></label>
                   <label><input type="radio" name="step" value="step"> Step</input></label>
                   <label><input type="radio" name="step" value="go"> Go</input></label>
+                  <label><input type="radio" name="step" value="reset"> Reset</input></label>
                   <!-- <label><input type="radio" name="step" value="reset"> Reset</input></label> -->
                 </fieldset>
               </form>
@@ -168,14 +169,15 @@
       
       var model, array_selection;
       
+      var model_options = { model: { nx: 100, ny: 100, initial_value: 2 }};
+
       function arrayTypeChange() {
         if (choose_array_type.elements[0].checked) {
           array_selection = "regular";
         } else {
           array_selection = "typed";
         }
-        model = new avalanche2d.Model({ model: { nx: 100, ny: 100, initial_value: 2 }}, array_selection);
-        model.nextStep();
+        model = new avalanche2d.Model(model_options, array_selection);
       };
       
       choose_array_type.onchange = arrayTypeChange;
@@ -243,9 +245,11 @@
             if (window.paintInterval) {
               window.clearInterval(paintInterval);
             }
-            model = new avalanche2d.Model({}, array_selection);
-            model.nextStep();
-            renderModelStep;
+            model.reset();
+            avalanche2d.displayFolderCanvas(canvas, model);
+            folder_data.innerHTML = '';
+            this.elements[1].checked = true;
+            this.elements[4].checked = false;
             break;
         }
       }
