@@ -78,6 +78,9 @@
       the office. In principle, just adding one new folder might involve redistribution at every
       desk, sometimes multiple times.
     </blockquote>
+    <p>
+      The simulation area is 100x100 cells.
+    </p>
   </div>
   <div id="content">
     <div id="webglCanvasContainer">
@@ -166,7 +169,7 @@
         } else {
           array_selection = "typed";
         }
-        model = new avalanche2d.Model({ model: { nx: 125, ny: 125, initial_value: 2 }}, array_selection);
+        model = new avalanche2d.Model({ model: { nx: 100, ny: 100, initial_value: 2 }}, array_selection);
         model.nextStep();
       };
       
