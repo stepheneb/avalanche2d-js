@@ -271,7 +271,7 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
 
     // if there is a row below increment the neighbor below
     index_plus_y = index + nx;
-    if (index_plus_y < this.ARRAY_SIZE) {
+    if (index_plus_y < size) {
         folder[index_plus_y]++;
         if (folder[index_plus_y] > 3) {
             this.new_cells_to_process.push([xpos, ypos+1, index_plus_y]);
