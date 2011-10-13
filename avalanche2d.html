@@ -89,55 +89,53 @@
         <li>
           <p>Avalanche-JS Model: Rendered using an HTML5 canvas</p>
           <canvas id="patchesCanvas"></canvas>
-          <ul class="hlist">
-            <li>
-              <form id="step-model">
-                <fieldset>
-                  <legend>Step: </legend>
-                  <label><input type="radio" name="step" value="stop" checked> Stop</input></label>
-                  <label><input type="radio" name="step" value="step"> Step</input></label>
-                  <label><input type="radio" name="step" value="go"> Go</input></label>
-                  <label><input type="radio" name="step" value="reset"> Reset</input></label>
-                  <!-- <label><input type="radio" name="step" value="reset"> Reset</input></label> -->
-                </fieldset>
-              </form>
-            </li>
-          </ul>
-          <ul class="hlist">
-            <li>
-              <fieldset>
-                <legend>Select Type of JavaScript Arrays: </legend>
-                <form id="choose-array-type">
-                  <label><input type="radio" name="array" value="regular"> Regular</input></label>
-                  <label><input type="radio" name="array" value="typed" disabled> Typed</input></label>
-                </form>
-              </fieldset>
-            </li>
-            <li>
-              <form id="show-me">
-                <fieldset>
-                  <legend>Select Rendering</legend>
-                  <label><input id="show-visualization" type="checkbox" checked/> Visualization</label>
-                  <label><input id="show-data-table" type="checkbox"/> Folder-Desk Array</label>
-                </fieldset>
-              </form>
-            </li>
-          </ul>
         </li>
         <li>
           <p>Average Number of folders on a desk</p>
           <div id='chart'></div>
         </li>
       </ul>
+      <ul class="hlist">
+        <li>
+          <form id="step-model">
+            <fieldset>
+              <legend>Step</legend>
+              <label><input type="radio" name="step" value="stop" checked> Stop</input></label>
+              <label><input type="radio" name="step" value="step"> Step</input></label>
+              <label><input type="radio" name="step" value="go"> Go</input></label>
+              <label><input type="radio" name="step" value="reset"> Reset</input></label>
+              <!-- <label><input type="radio" name="step" value="reset"> Reset</input></label> -->
+            </fieldset>
+          </form>
+        </li>
+        <li>
+          <fieldset>
+            <legend>JavaScript Array Type</legend>
+            <form id="choose-array-type">
+              <label><input type="radio" name="array" value="regular"> Regular</input></label>
+              <label><input type="radio" name="array" value="typed" disabled> Typed</input></label>
+            </form>
+          </fieldset>
+        </li>
+        <li>
+          <form id="show-me">
+            <fieldset>
+              <legend>Rendering</legend>
+              <label><input id="show-visualization" type="checkbox" checked/> Visualization</label>
+              <label><input id="show-data-table" type="checkbox"/> Folder-Desk Array</label>
+            </fieldset>
+          </form>
+        </li>
+      </ul>
     </div>
-    <h2 id="step-count">frame 0</h2>
+    <h3 id="step-count"></h3>
     <div id="info">
-      <h2>References</h2>
+      <h3>References</h3>
       <p><a href="http://jasss.soc.surrey.ac.uk/4/4/reviews/bak.html">Review of: How Nature Works: The Science of Self-Organised Criticality, Per Bak, New York, NY: Copernicus Press 1996</a></p>
       <p><a href="http://books.google.com/books?id=eBZbupdVnYAC&amp;pg=PA94&amp;lpg=PA94&amp;dq=Grassberger++bureaucrat&amp;source=bl&amp;ots=XR7W1E61Wa&amp;sig=06HmPg4d9YyBUz63RIphjUza1ik&amp;hl=en&amp;ei=MxGVTvThPIjk0QG4npnGBw&amp;sa=X&amp;oi=book_result&amp;ct=result&amp;resnum=1&amp;ved=0CBoQ6AEwAA#v=onepage&amp;q=Grassberger%20%20bureaucrat&amp;f=false">Self organized criticality in earth systems By Stefan Hergarten, page 94</a></p>
       <p><a href="http://www.cmth.ph.ic.ac.uk/people/k.christensen/papers/preprints/preprint_btw.pdf">On the avalanche size distribution in the BTW model</a></p>
       <p><a href="http://en.wikipedia.org/wiki/Self-organized_criticality">Wikipedia: Self-Organised Criticality</a></p>
-      <h2>Getting a browser that supports JavaScript Typed Arrays</h2>
+      <h3>Getting a browser that supports JavaScript Typed Arrays</h3>
       <div id="getting-webgl">
         <p>
           On some browsers using <a href=" https://developer.mozilla.org/en/JavaScript_typed_arrays">JavaScript Typed Arrays</a>
@@ -146,7 +144,7 @@
           whether your browser supports WebGL here: <a href="http://get.webgl.org/">http://get.webgl.org/</a>.
         </p>
     </div>
-    <h2>Folder-Desk Data Array:</h2>
+    <h3>Folder-Desk Data Array:</h3>
     <pre id="folder-data"></pre>
   </div>
 </div>
@@ -240,14 +238,12 @@
 
         switch(run_mode) {
           case "stop":
-            if (window.paintInterval) {
-              window.clearInterval(paintInterval);
-            };
+            if (window.paintInterval) window.clearInterval(paintInterval);
             avalanche2d.displayFolderCanvas(canvas, model);
             displayStats();
             break;
           case "step":
-            window.clearInterval(window.paintInterval);
+            if (window.paintInterval) window.clearInterval(paintInterval);
             renderModelStep();
             this.elements[1].checked = true;
             this.elements[2].checked = false;
@@ -256,12 +252,11 @@
             paintInterval = setInterval("renderModelStep()", 0);
             break;
           case "reset":
-            if (window.paintInterval) {
-              window.clearInterval(paintInterval);
-            }
+            if (window.paintInterval) window.clearInterval(paintInterval);
             model.reset();
             avalanche2d.displayFolderCanvas(canvas, model);
             folder_data.innerHTML = '';
+            step_count.innerHTML = '';
             this.elements[1].checked = true;
             this.elements[4].checked = false;
             break;
@@ -270,8 +265,7 @@
       
       step_model.onchange = runModelStep;
       avalanche2d.displayFolderCanvas(canvas, model);
-      step_count.innerHTML = 'frame: ' + model.indexOfStep;
-      
+
       function displayFolderTable() {
         if (show_data_table.checked) {
           avalanche2d.displayFolderTable(folder_data, model);

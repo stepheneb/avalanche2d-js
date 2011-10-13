@@ -86,17 +86,16 @@ h1 {
 h2 {
     color: #cc6600 !important;
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    padding: 15px 0 10px 0;
+    padding: 10px 0 10px 0;
     font-size: 1.4em;
     font-weight: normal;
-
 }
 
 h3 {
 
     color: #cc6600 !important;
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    padding: 15px 0px 10px;
+    padding: 5px 0px 5px;
     font-size: 1.2em;
     font-weight: normal;
     line-height: 1.5em;
@@ -583,6 +582,7 @@ fieldset label  {
 }
 
 #webglCanvasContainer ul.hlist li  {
+    margin: 5px 0px 5px 0px;
     line-height: 1.4em;
     color: #444444 !important;
 }
@@ -674,7 +674,7 @@ fieldset label  {
 }
 
 #info {
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 #footer {
