@@ -13,6 +13,16 @@ avalanche2d.VERSION = '0.1.0';
 
 avalanche2d.array_type = "regular";
 
+// Extend the Array object with a shuffle method
+
+Array.prototype.shuffle = function() {
+    var s = this, len = s.length; 
+    for(var i = len-1; i > 0; i--) {
+        var r = Math.floor(Math.random()*(i+1)), temp;
+        temp = s[i], s[i] = s[r], s[r] = temp;
+    } return this;
+};
+
 function createArray(size, fill) {
     fill = fill || 0;
     var a;
@@ -235,8 +245,6 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
     
     var index_plus_x, index_minus_x, index_plus_y, index_minus_y;
     
-    var folder_count;
-    
     var caused_avalanche = false;
     
     // if we're not on the left edge increment the neighbor to the left
@@ -275,6 +283,48 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
         folder[index_plus_y]++;
         if (folder[index_plus_y] > 3) {
             this.new_cells_to_process.push([xpos, ypos+1, index_plus_y]);
+            caused_avalanche = true;
+        };
+    };
+    return caused_avalanche;
+};
+
+avalanche2d.FolderSolver2D.prototype.distributeFoldersRandomOrder = function(xpos, ypos, index) {
+    // Currently about 10% slower than the non-random distributeFolders() function
+    var folder = this.model.folder;
+    var size = this.model.ARRAY_SIZE;
+    
+    var nx = this.nx;
+    var nx_minus_one = nx - 1;
+
+    var ny = this.ny;
+    var ny_minus_one = ny - 1;
+    
+    var neighbors = [];
+    
+    var caused_avalanche = false;
+    
+    // if we're not on the left edge queue the neighbor to the left
+    if (xpos > 0) neighbors.push([xpos-1, ypos, index-1]);
+
+    // if we're not on the right edge queue the neighbor to the right
+    if (xpos < nx_minus_one) neighbors.push([xpos+1, ypos, index+1]);
+
+    // if there is a row above queue the neighbor above
+    if (index >= nx) neighbors.push([xpos, ypos-1, index-nx]);
+
+    // if there is a row below queue the neighbor below
+    var index_plus_y = index + nx;
+    if (index_plus_y < size) neighbors.push([xpos, ypos+1, index_plus_y]);
+    
+    // randomize the order in which we process the neighbors
+    neighbors.shuffle();
+    
+    while (neighbors.length > 0) {
+        cell = neighbors.shift();
+        folder[cell[2]]++;
+        if (folder[cell[2]] > 3) {
+            this.new_cells_to_process.push(cell);
             caused_avalanche = true;
         };
     };
