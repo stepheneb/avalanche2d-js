@@ -582,7 +582,7 @@ fieldset label  {
 }
 
 #webglCanvasContainer ul.hlist li  {
-    margin: 5px 0px 5px 0px;
+    margin: 5px 10px 5px 0px;
     line-height: 1.4em;
     color: #444444 !important;
 }
