@@ -254,7 +254,7 @@
             xextent = xaxis2 - xaxis1;
           if (rupx != 0) {
               var changex, new_domain;
-              changex = 1 + (downx / rupx - 1) * (xextent/(downx-xaxis1));
+              changex = 1 + (downx / rupx - 1) * (xextent/(downx-xaxis1))/2;
               new_domain = [xaxis1, xaxis1 + (xextent * changex)];
               x.domain(new_domain);
               redraw();
@@ -271,8 +271,6 @@
               var changey, new_domain;
               changey = 1 + (rupy / downy - 1) * (yextent/(downy-yaxis2));
               new_domain = [yaxis1 + (yextent * changey), yaxis1];
-              // changey = downy / rupy;
-              // new_domain = [yaxis1 + (yextent * changey), yaxis1];
               y.domain(new_domain);
               redraw();
           }
