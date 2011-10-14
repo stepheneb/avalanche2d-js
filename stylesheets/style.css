@@ -23,6 +23,12 @@ pre {
   overflow: auto;
 }
 
+#step-count {
+  margin: 10px 5px 10px 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
 /* http://stackoverflow.com/questions/7615009/disable-interpolation-when-scaling-a-canvas */
 canvas {
   image-rendering: optimizeSpeed;

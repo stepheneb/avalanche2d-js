@@ -132,7 +132,7 @@
         </li>
       </ul>
     </div>
-    <h3 id="step-count"></h3>
+    <pre id="step-count"></pre>
     <div id="info">
       <h3>About the Graph Interface built with the JavaScript library 
       <a href='http://mbostock.github.com/d3/'>d3.js</a></h3>
@@ -179,7 +179,6 @@
       } else {
         choose_array_type.elements[1].disabled = true;
         choose_array_type.elements[0].checked = true;
-        
       };
 
       // avalanche2d.setupColorDivs();
@@ -214,35 +213,34 @@
       var canvas = document.getElementById("patchesCanvas");
       var run_mode;
 
-      var one_before_that_sample_time = new Date();
-      var last_sample_time = new Date();
+      var start_time  = new Date();
       var sample_time = new Date();
-      var average_sample_time_ms = sample_time - last_sample_time;
+      var last_sample_time = sample_time;
+      var average_sample_rate;
       var foldersRunningAverage;
       
       var graph_data = [2];
       var graph = grapher.graph(graph_data);
 
       window.renderModelStep = function() {
-          sample_time = new Date();
           model.nextStep();
           graph_data.push(model.averageFolders);
-          // graph.indexedData(graph_data, 0);
-          average_sample_time_ms = (average_sample_time_ms * 1.75 + (last_sample_time - one_before_that_sample_time) * 0.25) / 2;
-          one_before_that_sample_time = last_sample_time;
-          last_sample_time = sample_time;
+          sample_time = new Date();
           if (show_visualization.checked) {
             avalanche2d.displayFolderCanvas(canvas, model);
             displayStats();
           }
+          last_sample_time = sample_time;
           if (show_graph.checked) graph.add_point(model.averageFolders);
           if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
       };
 
       function displayStats() {
-        step_count.innerHTML = 'avalanches: ' + model.indexOfStep + 
-          sprintf(", rate: %3.1f (avalanches/s)", 1/average_sample_time_ms * 1000) +
-          sprintf(", folders: %1.2f (ave)", model.averageFolders);
+        average_sample_rate = model.indexOfStep / (sample_time - start_time) * 1000
+        step_count.innerText = 'avalanches: ' + model.indexOfStep + 
+          sprintf(", rate: %5.1f (avalanches/s)", average_sample_rate) +
+          sprintf(", last sample time: %3f (ms)", sample_time - last_sample_time) +
+          sprintf(", folders: %2.2f (ave)", model.averageFolders);
       };
       
       window.paintInterval;
@@ -257,7 +255,7 @@
           case "stop":
             if (window.paintInterval) window.clearInterval(paintInterval);
             avalanche2d.displayFolderCanvas(canvas, model);
-            displayStats();
+            if (!show_visualization.checked) displayStats();
             graph.new_data(graph_data);
             break;
           case "step":
@@ -267,6 +265,7 @@
             this.elements[2].checked = false;
             break;
           case "go":
+            start_time = new Date();
             paintInterval = setInterval("renderModelStep()", 0);
             break;
           case "reset":
