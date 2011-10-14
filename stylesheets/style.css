@@ -10,7 +10,7 @@ html {
 body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 85%;
-    line-height: 1em; /*color: #393939;*/
+    line-height: 1.2em; /*color: #393939;*/
     color: #444444;
     text-align: center;
     background-color: #d4e0eb;
@@ -34,13 +34,18 @@ canvas {
 
 #chart {
   background-color: #f7f2c5;
-  width: 500px;
+  width: 560px;
   height: 400px;
   border: solid 1px #cccccc; }
 
-circle, .line {
+.line {
   fill: none;
   stroke: steelblue;
+  stroke-width: 1.5px; }
+
+circle {
+  fill: none;
+  stroke: #aa4400;
   stroke-width: 1.5px; }
 
 circle {
@@ -392,6 +397,16 @@ h4 {
     height: 3000px;
 }
 
+#content ul  {
+    margin: 5px 10px 5px 10px;
+    padding-left: 10px;
+}
+
+#content ul li  {
+    margin: 5px 10px 5px 10px;
+    line-height: 1.2em;
+}
+
 .glCanvasFullFrame {
     width: 840px;
     margin-left: 20px;
@@ -639,11 +654,6 @@ fieldset label  {
     padding: 0 28% 0 0;
     font-style: normal;
     font-size: 1em;
-}
-
-#content ul {
-    padding-top: 2px;
-    padding-bottom: 0px;
 }
 
 #content ul.hlist li {

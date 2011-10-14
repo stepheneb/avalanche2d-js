@@ -69,7 +69,7 @@
     <blockquote>
       The mathematics of avalanche size and frequency follows a power law that can be simulated to
       a first approximation by any system that exhibits self-organized criticality (SOC). In "How
-      Nature Works"" Per Bak reports a simplified model of a sandpile that he, Chao Tang, and Curt
+      Nature Works" Per Bak reports a simplified model of a sandpile that he, Chao Tang, and Curt
       Wiesenfeld developed that shows SOC, the so-called BTW model. Bak also mentions that
       Grassberger describes a representation of this model that is fanciful but equivalent to the
       BTW model. Imagine an N-by-N grid of office desks and a bureaucrat sitting at each. A folder
@@ -82,7 +82,7 @@
       desk, sometimes multiple times.
     </blockquote>
     <p>
-      The simulation area is 100x100 cells. At this point the graph is not yet hooked up.
+      The simulation area is 100x100 cells.
     </p>
   </div>
   <div id="content">
@@ -124,6 +124,7 @@
             <fieldset>
               <legend>Rendering</legend>
               <label><input id="show-visualization" type="checkbox" checked/> Visualization</label>
+              <label><input id="show-graph" type="checkbox" checked/> Graph</label>
               <label><input id="show-data-table" type="checkbox"/> Folder-Desk Array</label>
             </fieldset>
           </form>
@@ -132,6 +133,17 @@
     </div>
     <h3 id="step-count"></h3>
     <div id="info">
+      <h3>About the Graph Interface</h3>
+      <ul>
+        <li><b>Translate/Pan:</b> drag on the graph canvas.</li>
+        <li><b>Zoom in:</b> double-click or swipe up with two fingers</li>
+        <li><b>Zoom out:</b> shift-double-click or swipe down with two fingers</li>
+        <li><b>Re-scale and axis:</b> drag on one of the X or Y axis numeric labels</li>
+        <li><b>Select data point:</b> click on a data point to select it</li>
+        <li><b>Change data point:</b> drag a selected data point to change it's value</li>
+        <li><b>Delete data point:</b> select data point and press the delete or backspace key</li>
+        <li><b>Add data point:</b> hold ALT/Option key down and click an empty area of the graph to add a data point</li>
+      </ul>
       <h3>References</h3>
       <p><a href="http://jasss.soc.surrey.ac.uk/4/4/reviews/bak.html">Review of: How Nature Works: The Science of Self-Organised Criticality, Per Bak, New York, NY: Copernicus Press 1996</a></p>
       <p><a href="http://books.google.com/books?id=eBZbupdVnYAC&amp;pg=PA94&amp;lpg=PA94&amp;dq=Grassberger++bureaucrat&amp;source=bl&amp;ots=XR7W1E61Wa&amp;sig=06HmPg4d9YyBUz63RIphjUza1ik&amp;hl=en&amp;ei=MxGVTvThPIjk0QG4npnGBw&amp;sa=X&amp;oi=book_result&amp;ct=result&amp;resnum=1&amp;ved=0CBoQ6AEwAA#v=onepage&amp;q=Grassberger%20%20bureaucrat&amp;f=false">Self organized criticality in earth systems By Stefan Hergarten, page 94</a></p>
@@ -192,6 +204,7 @@
       var step_model = document.getElementById("step-model");
       
       var show_visualization = document.getElementById("show-visualization");
+      var show_graph = document.getElementById("show-graph");
       var show_data_table = document.getElementById("show-data-table");
       
       var step_count = document.getElementById("step-count");
@@ -206,7 +219,7 @@
       var foldersRunningAverage;
       
       var graph_data = [2];
-      // var graph = grapher.sampleGraph(graph_data);
+      var graph = grapher.graph(graph_data);
 
       window.renderModelStep = function() {
           sample_time = new Date();
@@ -220,6 +233,7 @@
             avalanche2d.displayFolderCanvas(canvas, model);
             displayStats();
           }
+          if (show_graph.checked) graph.add_point(model.averageFolders);
           if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
       };
 
@@ -242,6 +256,7 @@
             if (window.paintInterval) window.clearInterval(paintInterval);
             avalanche2d.displayFolderCanvas(canvas, model);
             displayStats();
+            graph.new_data(graph_data);
             break;
           case "step":
             if (window.paintInterval) window.clearInterval(paintInterval);
@@ -266,6 +281,16 @@
       
       step_model.onchange = runModelStep;
       avalanche2d.displayFolderCanvas(canvas, model);
+
+      function displayGraph() {
+        if (show_graph.checked) {
+          graph.new_data(graph_data);
+        } else {
+          
+        };
+      }
+      
+      show_graph.onchange = displayGraph;
 
       function displayFolderTable() {
         if (show_data_table.checked) {
