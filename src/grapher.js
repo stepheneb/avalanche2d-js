@@ -78,7 +78,31 @@
     function new_data(d) {
       points = indexedData(d, 0)
     };
-
+    
+    // custom generation of line path 'd' attribute string
+    // using memoized attr_str ... not much faster than d3
+    var generate_path_attribute = function () {
+      var attr_str = '';
+      var gen = function(pts, x, y) {
+        var result = attr_str, 
+            i = -1, 
+            n = pts.length, 
+            path = [],
+            value;
+        if (result.length == 0) {
+          path.push("M",
+            x.call(self, pts[0].x, 0), ",", 
+            y.call(self, pts[0].y, 0));
+          i++
+        };
+        while (++i < n) path.push("L",
+          x.call(self, pts[i].x, i), ",", 
+          y.call(self, pts[i].y, i)); 
+        return attr_str += path.join("");
+      };
+      return gen;
+    }();
+    
     function add_point(p) {
       var point = { x: points.length, y: p };
       points.push(point)
