@@ -82,8 +82,8 @@
       desk, sometimes multiple times.
     </blockquote>
     <p>
-      The simulation area is 100x100 cells. The graph is built with the JavaScript library 
-      <a href='http://mbostock.github.com/d3/'>d3.js</a>. 
+      The simulation area is 100x100 cells. A yellow cell indicates two folders on the desk, 
+      a blue cell is zero, green one, and red three folders. 
     </p>
   </div>
   <div id="content">
@@ -134,7 +134,8 @@
     </div>
     <h3 id="step-count"></h3>
     <div id="info">
-      <h3>About the Graph Interface</h3>
+      <h3>About the Graph Interface built with the JavaScript library 
+      <a href='http://mbostock.github.com/d3/'>d3.js</a></h3>
       <ul>
         <li><b>Translate/Pan:</b> drag on the graph canvas.</li>
         <li><b>Zoom in:</b> double-click or swipe up with two fingers</li>
@@ -274,6 +275,8 @@
             avalanche2d.displayFolderCanvas(canvas, model);
             folder_data.innerHTML = '';
             step_count.innerHTML = '';
+            graph_data = [2];
+            graph.new_data(graph_data);
             this.elements[1].checked = true;
             this.elements[4].checked = false;
             break;
