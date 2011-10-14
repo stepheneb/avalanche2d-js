@@ -69,7 +69,16 @@
     vis.append("svg:path")
         .attr("class", "line")
         .attr("d", line(points));
- 
+
+    // variables for speeding up dynamic plotting
+    var line_path = vis.select("path")[0][0];
+    var line_seglist = line_path.pathSegList;
+    var vis_node = vis.node();
+    var cpoint = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    cpoint.setAttribute("cx", 1);
+    cpoint.setAttribute("cy", 1);
+    cpoint.setAttribute("r",  1);
+    
     d3.select(window)
         .on("mousemove", mousemove)
         .on("mouseup", mouseup)
@@ -104,19 +113,26 @@
     }();
     
     function add_point(p) {
-      var point = { x: points.length, y: p };
-      points.push(point)
-      vis.select("path").attr("d", line(points));
-      // vis.append("circle")
-      //     .data([point])
-      //     .attr("class", function(d) { return d === selected ? "selected" : null; })
-      //     .attr("cx",    function(d) { return x(d.x); })
-      //     .attr("cy",    function(d) { return y(d.y); })
-      //     .attr("r", 0.5)
-      //     .on("mousedown", function(d) {
-      //       selected = dragged = d;
-      //       update();
-      //     });      
+      var len = points.length;
+      var point = { x: len, y: p };
+      points.push(point);
+      var newx = x.call(self, len, len);
+      var newy = y.call(self, p, len);
+
+      // adding circle points with dom manipulation
+      // var c2 = cpoint.cloneNode(false);
+      // c2.setAttribute("cx", newx);
+      // c2.setAttribute("cy", newy);
+      // vis_node.appendChild(c2);
+
+      // adding circle points with d3
+      // vis.append("svg:circle").attr('cx',newx).attr('cy',newy).attr('r',1)
+      
+      // adding new line segments with dom manipulation
+      line_seglist.appendItem(line_path.createSVGPathSegLinetoAbs(newx, newy));
+
+      // adding new line segments with d3 and custom attribute generation
+      // vis.select("path").attr("d", generate_path_attribute([point], x, y));
     };
     
     function update() {
