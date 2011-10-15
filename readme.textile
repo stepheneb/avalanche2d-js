@@ -35,15 +35,14 @@ h2. Benchmarks
 
 h3. Time for modeling and rendering to both the model canvas and the graph rendered into SVG using d3.js.
 
-|_. Mac OS X 10.6.8        |_\3>. duration of step at model step number |_\3>.       ave rate (steps/s) at 5000 steps |
-|_. Browser                |_.        100 |_.       2500 |_.       5000 |_. on |_. graph off |_. graph and canvas off |
-| WebKit nightly rev97458  |            4 |            5 |            4 |  121 |         160 |                    236 |
-| Safari v5.1 (6534.50)    |            4 |            5 |            5 |  110 |         141 |                    227 |
-| FireFox 7.0.1            |            6 |           11 |           39 |   67 |         166 |                    242 |
-| FireFox Nightly 10.0a1   |            6 |           15 |           48 |   62 |         193 |                    247 |
-| Chrome 16.0.908.0 canary |            6 |           16 |           49 |   51 |         195 |                    232 |
-| Chrome 14.0.835.186      |            5 |           16 |           49 |   58 |         198 |                    230 |
-
+|_. Mac OS X 10.6.8          |_\3>.       ave rate (steps/s) at 5000 steps |_\3>. duration of step at model step number |
+|_. Browser                  |_. on |_. graph off |_. graph and canvas off |_.        100 |_.       2500 |_.       5000 |
+| WebKit nightly rev97458    |  121 |         160 |                    236 |            4 |            5 |            4 |
+| Safari v5.1 (6534.50)      |  110 |         141 |                    227 |            4 |            5 |            5 |
+| FireFox 7.0.1              |   67 |         166 |                    242 |            6 |           11 |           39 |
+| FireFox Nightly 10.0a1     |   62 |         193 |                    247 |            6 |           15 |           48 |
+| Chrome 16.0.908.0 canary   |   51 |         195 |                    232 |            6 |           16 |           49 |
+| Chrome 14.0.835.186        |   58 |         198 |                    230 |            5 |           16 |           49 |
 
 |_. Windows 7 in VirtualBox  |_\3>.       ave rate (steps/s) at 5000 steps |
 |_. Browser                  |_. on |_. graph off |_. graph and canvas off |
