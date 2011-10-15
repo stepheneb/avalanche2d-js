@@ -1,8 +1,8 @@
 h1. Avalanche2D-JS
 
-A partial "JavaScript port":https://github.com/stepheneb/avalanche2d-js of Bob Tinker's "NetLogo":http://ccl.northwestern.edu/netlogo/ model "Bureaucrats.v6":https://github.com/stepheneb/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo exploring "Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
+A partial "JavaScript port":https://github.com/stepheneb/avalanche2d-js of Bob Tinker's "NetLogo":http://ccl.northwestern.edu/netlogo/ model "Bureaucrats.v6":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo exploring "Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
 
-!https://github.com/stepheneb/avalanche2d-js/images/screenshot.png(screenshot of avalanche2d-js)!
+!http://stepheneb.github.com/avalanche2d-js/images/screenshot.png(screenshot of avalanche2d-js)!:http://stepheneb.github.com/avalanche2d-js/avalanche2d.html
 
 I'm working on new ways of being able to create and run models in html5 browser-technologies that we used to build with Java and wanted to see how hard it would be to convert one of Bob's NetLogo models.
 
