@@ -1,14 +1,14 @@
 h1. Avalanche2D-JS
 
-A partial "JavaScript port":https://github.com/stepheneb/avalanche2d-js of Bob Tinker's "NetLogo":http://ccl.northwestern.edu/netlogo/ model "Bureaucrats.v6":https://github.com/stepheneb/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo'>Bureaucrats.v6 exploring "Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
+A partial "JavaScript port":https://github.com/stepheneb/avalanche2d-js of Bob Tinker's "NetLogo":http://ccl.northwestern.edu/netlogo/ model "Bureaucrats.v6":https://github.com/stepheneb/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo exploring "Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
+
+!https://github.com/stepheneb/avalanche2d-js/images/screenshot.png(screenshot of avalanche2d-js)!
 
 I'm working on new ways of being able to create and run models in html5 browser-technologies that we used to build with Java and wanted to see how hard it would be to convert one of Bob's NetLogo models.
 
 The avalanche/bureaucrat model was a good first choice because it only uses the patches feature of NetLogo and not turtles.
 
-While it would take a good deal more work to make a whole authoring environment that would be effective 
-and productive for someone like Bob I think this is a very successful proof-of-concept. At this point 
-I think it would be relatively easy to convert a model that had turtles also.
+While it would take a good deal more work to make a whole authoring environment that would be effective and productive for non-professional programmers I think this is a very successful proof-of-concept. At this point I think it would be relatively easy to convert a model that had turtles also.
 
 bq. The mathematics of avalanche size and frequency follows a power law that can be simulated to
     a first approximation by any system that exhibits self-organized criticality (SOC). In "How
@@ -35,7 +35,7 @@ h2. Benchmarks
 
 h3. Time for modeling and rendering to both the model canvas and the graph rendered into SVG using d3.js.
 
-**October 14, 2011**
+**Data collected October 14, 2011**
 
 |_.                        |_\3>. duration of step at model step number |_\3>.       ave rate (steps/s) at 5000 steps |
 |_. Browser                |_.        100 |_.       2500 |_.       5000 |_. on |_. graph off |_. graph and canvas off |
