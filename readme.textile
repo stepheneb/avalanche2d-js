@@ -16,6 +16,8 @@ bq. The mathematics of avalanche size and frequency follows a power law that can
     the office. In principle, just adding one new folder might involve redistribution at every
     desk, sometimes multiple times.
 
+**The screen after approximately 5000 avalanches.**
+
 !http://stepheneb.github.com/avalanche2d-js/images/screenshot.png(screenshot of avalanche2d-js)!:http://stepheneb.github.com/avalanche2d-js/avalanche2d.html
 
 I'm working on new ways of being able to create and run models in html5 browser-technologies that we used to build with Java and wanted to see how hard it would be to convert one of Bob's NetLogo models. The avalanche/bureaucrat model was a good first choice because it only uses the patches feature of NetLogo and not turtles.
