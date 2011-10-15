@@ -1,14 +1,6 @@
 h1. "Avalanche2D-JS":http://stepheneb.github.com/avalanche2d-js/avalanche2d.html
 
-A partial "JavaScript port":https://github.com/stepheneb/avalanche2d-js of Bob Tinker's "NetLogo":http://ccl.northwestern.edu/netlogo/ model "Bureaucrats.v6":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo exploring "Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
-
-!http://stepheneb.github.com/avalanche2d-js/images/screenshot.png(screenshot of avalanche2d-js)!:http://stepheneb.github.com/avalanche2d-js/avalanche2d.html
-
-I'm working on new ways of being able to create and run models in html5 browser-technologies that we used to build with Java and wanted to see how hard it would be to convert one of Bob's NetLogo models.
-
-The avalanche/bureaucrat model was a good first choice because it only uses the patches feature of NetLogo and not turtles.
-
-While it would take a good deal more work to make a whole authoring environment that would be effective and productive for non-professional programmers I think this is a very successful proof-of-concept. At this point I think it would be relatively easy to convert a model that had turtles also.
+A partial "JavaScript port":http://stepheneb.github.com/avalanche2d-js/avalanche2d.html of Bob Tinker's "NetLogo":http://ccl.northwestern.edu/netlogo/ model "Bureaucrats.v6":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo exploring "Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
 
 bq. The mathematics of avalanche size and frequency follows a power law that can be simulated to
     a first approximation by any system that exhibits self-organized criticality (SOC). In "How
@@ -23,6 +15,12 @@ bq. The mathematics of avalanche size and frequency follows a power law that can
     bureaucrat's actions causes neighbors to exceed three folders, which then ripples through
     the office. In principle, just adding one new folder might involve redistribution at every
     desk, sometimes multiple times.
+
+!http://stepheneb.github.com/avalanche2d-js/images/screenshot.png(screenshot of avalanche2d-js)!:http://stepheneb.github.com/avalanche2d-js/avalanche2d.html
+
+I'm working on new ways of being able to create and run models in html5 browser-technologies that we used to build with Java and wanted to see how hard it would be to convert one of Bob's NetLogo models. The avalanche/bureaucrat model was a good first choice because it only uses the patches feature of NetLogo and not turtles.
+
+While it would take a good deal more work to make a whole authoring environment that would be effective and productive for non-professional programmers I think this is a very successful proof-of-concept. At this point I think it would be relatively easy to convert a model that had turtles also.
 
 h2. References
 
