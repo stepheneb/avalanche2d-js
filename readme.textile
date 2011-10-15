@@ -1,4 +1,4 @@
-h1. Avalanche2D-JS
+h1. "Avalanche2D-JS":http://stepheneb.github.com/avalanche2d-js/avalanche2d.html
 
 A partial "JavaScript port":https://github.com/stepheneb/avalanche2d-js of Bob Tinker's "NetLogo":http://ccl.northwestern.edu/netlogo/ model "Bureaucrats.v6":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo exploring "Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
 
