@@ -1,15 +1,10 @@
 h1. Avalanche2D-JS
 
-A partial "JavaScript port":https://github.com/stepheneb/avalanche2d-js of Bob Tinker's 
-"NetLogo":http://ccl.northwestern.edu/netlogo/ model 
-"Bureaucrats.v6":https://github.com/stepheneb/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo'>Bureaucrats.v6
-exploring "Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality">Self-Organised
+A partial "JavaScript port":https://github.com/stepheneb/avalanche2d-js of Bob Tinker's "NetLogo":http://ccl.northwestern.edu/netlogo/ model "Bureaucrats.v6":https://github.com/stepheneb/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo'>Bureaucrats.v6 exploring "Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
 
-I'm working on new ways of being able to create and run models in html5 browser-technologies that 
-we used to build with Java and wanted to see how hard it would be to convert one of Bob's NetLogo models.
+I'm working on new ways of being able to create and run models in html5 browser-technologies that we used to build with Java and wanted to see how hard it would be to convert one of Bob's NetLogo models.
 
-The avalanche/bureaucrat model was a good first choice because it only uses the patches feature of 
-NetLogo and not turtles.
+The avalanche/bureaucrat model was a good first choice because it only uses the patches feature of NetLogo and not turtles.
 
 While it would take a good deal more work to make a whole authoring environment that would be effective 
 and productive for someone like Bob I think this is a very successful proof-of-concept. At this point 
@@ -31,10 +26,10 @@ bq. The mathematics of avalanche size and frequency follows a power law that can
 
 h2. References
 
-- "Review of: How Nature Works: The Science of Self-Organised Criticality, Per Bak, New York, NY: Copernicus Press 1996":http://jasss.soc.surrey.ac.uk/4/4/reviews/bak.html
-- "Self organized criticality in earth systems By Stefan Hergarten, page 94":http://books.google.com/books?id=eBZbupdVnYAC&pg=PA94&lpg=PA94&dq=Grassberger++bureaucrat&source=bl&ots=XR7W1E61Wa&sig=06HmPg4d9YyBUz63RIphjUza1ik&hl=en&ei=MxGVTvThPIjk0QG4npnGBw&sa=X&oi=book_result&ct=result&resnum=1&ved=0CBoQ6AEwAA#v=onepage&q=Grassberger%20%20bureaucrat&f=false
-- "On the avalanche size distribution in the BTW model":http://www.cmth.ph.ic.ac.uk/people/k.christensen/papers/preprints/preprint_btw.pdf
-- "Wikipedia: Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
+# "Review of: How Nature Works: The Science of Self-Organised Criticality, Per Bak, New York, NY: Copernicus Press 1996":http://jasss.soc.surrey.ac.uk/4/4/reviews/bak.html
+# "Self organized criticality in earth systems By Stefan Hergarten, page 94":http://books.google.com/books?id=eBZbupdVnYAC&pg=PA94&lpg=PA94&dq=Grassberger++bureaucrat&source=bl&ots=XR7W1E61Wa&sig=06HmPg4d9YyBUz63RIphjUza1ik&hl=en&ei=MxGVTvThPIjk0QG4npnGBw&sa=X&oi=book_result&ct=result&resnum=1&ved=0CBoQ6AEwAA#v=onepage&q=Grassberger%20%20bureaucrat&f=false
+# "On the avalanche size distribution in the BTW model":http://www.cmth.ph.ic.ac.uk/people/k.christensen/papers/preprints/preprint_btw.pdf
+# "Wikipedia: Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
 
 h2. Benchmarks
 
@@ -43,7 +38,7 @@ h3. Time for modeling and rendering to both the model canvas and the graph rende
 **October 14, 2011**
 
 |_.                        |_\3>. duration of step at model step number |_\3>.       ave rate (steps/s) at 5000 steps |
-|_. Browser                |_.        100 |_.       2500 |_.       5000 |_.    |_. graph off |_. graph and canvas off |
+|_. Browser                |_.        100 |_.       2500 |_.       5000 |_. on |_. graph off |_. graph and canvas off |
 | WebKit nightly rev97458  |            4 |            5 |            4 |  121 |         160 |                    236 |
 | Safari v5.1 (6534.50)    |            4 |            5 |            5 |  110 |         141 |                    227 |
 | FireFox 7.0.1            |            6 |           11 |           39 |   67 |         166 |                    242 |
@@ -54,7 +49,7 @@ h3. Time for modeling and rendering to both the model canvas and the graph rende
 
 
 |_. Windows 7 in VirtualBox |_\3>.       ave rate (steps/s) at 5000 steps |
-|_. Browser                 |_.    |_. graph off |_. graph and canvas off |
+|_. Browser                 |_. on |_. graph off |_. graph and canvas off |
 | Safari v5.1 (6534.50)     |  110 |         141 |                    227 |
 | FireFox 7.0.1             |   67 |         166 |                    242 |
 | FireFox Nightly 10.0a1    |   62 |         193 |                    247 |
