@@ -237,6 +237,10 @@
           last_sample_time = sample_time;
           if (show_graph.checked) graph.add_point(model.averageFolders);
           if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
+          if (model.indexOfStep >= 5000) {
+            if (window.paintInterval) window.clearInterval(paintInterval);
+            step_model.elements[1].checked = true;
+          }
       };
 
       function displayStats() {
