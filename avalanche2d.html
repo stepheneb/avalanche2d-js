@@ -59,6 +59,33 @@
         script.src = libraries[0];
         document.getElementsByTagName("head")[0].appendChild(script);
       };
+      
+      // https://cvs.khronos.org/svn/repos/registry/trunk/public/webgl/sdk/demos/common/webgl-utils.js
+      //
+      // Provides requestAnimationFrame in a cross browser way.
+      //
+      window.requestAnimFrame = (function() {
+        return window.requestAnimationFrame ||
+               window.webkitRequestAnimationFrame ||
+               window.mozRequestAnimationFrame ||
+               window.oRequestAnimationFrame ||
+               window.msRequestAnimationFrame ||
+               function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+                 return window.setTimeout(callback, 1000/60);
+               };
+      })();
+
+      //
+      // Provides cancelRequestAnimationFrame in a cross browser way.
+      //
+      window.cancelRequestAnimFrame = (function() {
+        return window.cancelCancelRequestAnimationFrame ||
+               window.webkitCancelRequestAnimationFrame ||
+               window.mozCancelRequestAnimationFrame ||
+               window.oCancelRequestAnimationFrame ||
+               window.msCancelRequestAnimationFrame ||
+               window.clearTimeout;
+      })();
     </script>
 </head>
 <div id="container">
@@ -192,13 +219,15 @@
       
       var model_options = { model: { nx: 100, ny: 100, initial_value: 2 }};
 
+      var canvas = document.getElementById("patchesCanvas");
+
       function arrayTypeChange() {
         if (choose_array_type.elements[0].checked) {
           array_selection = "regular";
         } else {
           array_selection = "typed";
         }
-        model = new avalanche2d.Model(model_options, array_selection);
+        model = new avalanche2d.Model(canvas, model_options, array_selection);
       };
       
       choose_array_type.onchange = arrayTypeChange;
@@ -214,7 +243,6 @@
       
       var step_count = document.getElementById("step-count");
 
-      var canvas = document.getElementById("patchesCanvas");
       var run_mode;
 
       var start_time  = new Date();
@@ -226,17 +254,17 @@
       var graph_data = [2];
       var graph = grapher.graph(graph_data);
 
-      window.renderModelStep = function() {
-          model.nextStep();
+      var runModelStep = function() {
+          model.nextStep(show_visualization.checked);
           graph_data.push(model.averageFolders);
           sample_time = new Date();
           if (show_visualization.checked) {
-            avalanche2d.displayFolderCanvas(canvas, model);
+            // avalanche2d.displayFolderCanvas(canvas, model);
             displayStats();
           }
           last_sample_time = sample_time;
           if (show_graph.checked) graph.add_point(model.averageFolders);
-          if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
+          if (show_data_table.checked) model.displayFolderTable(folder_data);
       };
 
       function displayStats() {
@@ -247,37 +275,44 @@
           sprintf(", folders: %2.3f (ave)", model.averageFolders);
       };
       
-      window.paintInterval;
+      window.stepInterval;
 
       var display_method;
       
-      function runModelStep() {
+      function modelController() {
         for(var i = 0; i < this.elements.length; i++)
             if (this.elements[i].checked) run_mode = this.elements[i].value;
 
         switch(run_mode) {
           case "stop":
-            if (window.paintInterval) window.clearInterval(paintInterval);
-            avalanche2d.displayFolderCanvas(canvas, model);
+            if (window.stepInterval) window.clearInterval(stepInterval);
+            // if (window.animationRequest) cancelRequestAnimFrame(window.animationRequest);
+            model.displayCanvas();
+            // avalanche2d.displayFolderCanvas(canvas, model);
             if (!show_visualization.checked) displayStats();
             graph.new_data(graph_data);
             break;
           case "step":
-            if (window.paintInterval) window.clearInterval(paintInterval);
-            renderModelStep();
+            if (window.stepInterval) window.clearInterval(stepInterval);
+            // if (window.animationRequest) cancelRequestAnimFrame(window.animationRequest);
+            runModelStep();
+            model.displayCanvas();
             this.elements[1].checked = true;
             this.elements[2].checked = false;
             break;
           case "go":
             start_time = new Date();
-            paintInterval = setInterval("renderModelStep()", 0);
+            stepInterval = setInterval(runModelStep, 0);
+            // if (show_visualization.checked) model.animateCanvas();
             break;
           case "reset":
-            if (window.paintInterval) window.clearInterval(paintInterval);
+            if (window.stepInterval) window.clearInterval(stepInterval);
+            // if (window.animationRequest) cancelRequestAnimFrame(window.animationRequest);
             model.reset();
-            avalanche2d.displayFolderCanvas(canvas, model);
-            folder_data.innerHTML = '';
-            step_count.innerHTML = '';
+            model.displayCanvas();
+            // avalanche2d.displayFolderCanvas(canvas, model);
+            folder_data.textContent = '';
+            step_count.textContent = '';
             graph_data = [2];
             graph.new_data(graph_data);
             this.elements[1].checked = true;
@@ -286,8 +321,9 @@
         }
       }
       
-      step_model.onchange = runModelStep;
-      avalanche2d.displayFolderCanvas(canvas, model);
+      step_model.onchange = modelController;
+      model.displayCanvas();
+      // avalanche2d.displayFolderCanvas(canvas, model);
 
       function displayGraph() {
         if (show_graph.checked) {
@@ -301,9 +337,9 @@
 
       function displayFolderTable() {
         if (show_data_table.checked) {
-          avalanche2d.displayFolderTable(folder_data, model);
+          model.displayFolderTable(folder_data);
         } else {
-          folder_data.innerHTML = '';
+          folder_data.textContent = '';
         };
       }
       
