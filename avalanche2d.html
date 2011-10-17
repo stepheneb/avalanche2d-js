@@ -228,17 +228,15 @@
       var graph_data = [2];
       var graph = grapher.graph(graph_data);
 
-      window.renderModelStep = function() {
+      window.runModelStep = function() {
+          last_sample_time = new Date(sample_time);
           model.nextStep();
           graph_data.push(model.averageFolders);
-          sample_time = new Date();
-          if (show_visualization.checked) {
-            avalanche2d.displayFolderCanvas(canvas, model);
-            displayStats();
-          }
-          last_sample_time = sample_time;
           if (show_graph.checked) graph.add_point(model.averageFolders);
           if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
+          if (show_visualization.checked) avalanche2d.displayFolderCanvas(canvas, model);
+          sample_time = new Date();
+          if (show_visualization.checked) displayStats();
           if (model.indexOfStep >= 5000) modelStop();
       };
 
@@ -250,14 +248,13 @@
           sprintf(", folders: %2.3f (ave)", model.averageFolders);
       };
       
-      window.paintInterval;
+      window.modelStepInterval;
 
       var display_method;
       
-      function runModelStep() {
+      function modelController() {
         for(var i = 0; i < this.elements.length; i++)
             if (this.elements[i].checked) run_mode = this.elements[i].value;
-
         switch(run_mode) {
           case "stop":
             modelStop();
@@ -272,10 +269,10 @@
             modelReset();
             break;
         }
-      }
+      };
       
       function modelStop() {
-        if (window.paintInterval) window.clearInterval(paintInterval);
+        if (window.modelStepInterval) window.clearInterval(modelStepInterval);
         avalanche2d.displayFolderCanvas(canvas, model);
         if (!show_visualization.checked) displayStats();
         graph.new_data(graph_data);
@@ -283,8 +280,8 @@
       };
       
       function modelStep() {
-        if (window.paintInterval) window.clearInterval(paintInterval);
-        renderModelStep();
+        if (window.modelStepInterval) window.clearInterval(modelStepInterval);
+        runModelStep();
         if (!show_visualization.checked) {
           displayStats();
           avalanche2d.displayFolderCanvas(canvas, model);
@@ -300,12 +297,12 @@
           step_model.elements[1].checked = true;
         } else {
           start_time = new Date();
-          paintInterval = setInterval("renderModelStep()", 0);
+          modelStepInterval = setInterval('runModelStep()', 0);
         }
       };
       
       function modelReset() {
-        if (window.paintInterval) window.clearInterval(paintInterval);
+        if (window.modelStepInterval) window.clearInterval(modelStepInterval);
         model.reset();
         avalanche2d.displayFolderCanvas(canvas, model);
         folder_data.innerHTML = '';
@@ -320,7 +317,7 @@
         step_model_warning.innerHTML = "<fieldset><legend>Note</legend>Reset the model to start again.</fieldset>"
       };
 
-      step_model.onchange = runModelStep;
+      step_model.onchange = modelController;
       avalanche2d.displayFolderCanvas(canvas, model);
 
       function displayGraph() {
