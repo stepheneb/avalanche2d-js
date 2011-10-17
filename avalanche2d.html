@@ -134,6 +134,7 @@
             </fieldset>
           </form>
         </li>
+        <li id="step-model-warning"></li>
       </ul>
     </div>
     <pre id="step-count"></pre>
@@ -212,6 +213,7 @@
       var show_graph = document.getElementById("show-graph");
       var show_data_table = document.getElementById("show-data-table");
       
+      var step_model_warning = document.getElementById("step-model-warning");
       var step_count = document.getElementById("step-count");
 
       var canvas = document.getElementById("patchesCanvas");
@@ -237,15 +239,13 @@
           last_sample_time = sample_time;
           if (show_graph.checked) graph.add_point(model.averageFolders);
           if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
-          if (model.indexOfStep >= 5000) {
-            modelStop();
-          }
+          if (model.indexOfStep >= 5000) modelStop();
       };
 
       function displayStats() {
         average_sample_rate = model.indexOfStep / (sample_time - start_time) * 1000
         step_count.textContent = 'avalanches: ' + model.indexOfStep + 
-          sprintf(", rate: %5.1f (avalanches/s)", average_sample_rate) +
+          sprintf(", rate: %5.1f (steps/s)", average_sample_rate) +
           sprintf(", last sample time: %3f (ms)", sample_time - last_sample_time) +
           sprintf(", folders: %2.3f (ave)", model.averageFolders);
       };
@@ -263,25 +263,13 @@
             modelStop();
             break;
           case "step":
-            if (window.paintInterval) window.clearInterval(paintInterval);
-            renderModelStep();
-            this.elements[1].checked = true;
-            this.elements[2].checked = false;
+            modelStep();
             break;
           case "go":
-            start_time = new Date();
-            paintInterval = setInterval("renderModelStep()", 0);
+            modelGo();
             break;
           case "reset":
-            if (window.paintInterval) window.clearInterval(paintInterval);
-            model.reset();
-            avalanche2d.displayFolderCanvas(canvas, model);
-            folder_data.innerHTML = '';
-            step_count.innerHTML = '';
-            graph_data = [2];
-            graph.new_data(graph_data);
-            this.elements[1].checked = true;
-            this.elements[4].checked = false;
+            modelReset();
             break;
         }
       }
@@ -291,6 +279,45 @@
         avalanche2d.displayFolderCanvas(canvas, model);
         if (!show_visualization.checked) displayStats();
         graph.new_data(graph_data);
+        step_model.elements[1].checked = true;
+      };
+      
+      function modelStep() {
+        if (window.paintInterval) window.clearInterval(paintInterval);
+        renderModelStep();
+        if (!show_visualization.checked) {
+          displayStats();
+          avalanche2d.displayFolderCanvas(canvas, model);
+        };
+        if (!show_graph.checked) graph.new_data(graph_data);
+        if (model.indexOfStep >= 5000) displayResetWarning();
+        step_model.elements[1].checked = true;
+      };
+
+      function modelGo() {
+        if (model.indexOfStep >= 5000) {
+          displayResetWarning();
+          step_model.elements[1].checked = true;
+        } else {
+          start_time = new Date();
+          paintInterval = setInterval("renderModelStep()", 0);
+        }
+      };
+      
+      function modelReset() {
+        if (window.paintInterval) window.clearInterval(paintInterval);
+        model.reset();
+        avalanche2d.displayFolderCanvas(canvas, model);
+        folder_data.innerHTML = '';
+        step_count.innerHTML = '';
+        step_model_warning.innerHTML = null;
+        graph_data = [2];
+        graph.new_data(graph_data);
+        step_model.elements[1].checked = true;
+      }
+
+      function displayResetWarning() {
+        step_model_warning.innerHTML = "<fieldset><legend>Note</legend>Reset the model to start again.</fieldset>"
       };
 
       step_model.onchange = runModelStep;
