@@ -287,7 +287,7 @@
           displayStats();
           avalanche2d.displayFolderCanvas(canvas, model);
         };
-        if (!show_graph.checked) graph.new_data(graph_data);
+        graph.new_data(graph_data);
         step_model.elements[1].checked = true;
       };
       
@@ -298,7 +298,7 @@
           displayStats();
           avalanche2d.displayFolderCanvas(canvas, model);
         };
-        if (!show_graph.checked) graph.new_data(graph_data);
+        graph.new_data(graph_data);
         if (model.indexOfStep >= 5000) displayResetWarning();
         step_model.elements[1].checked = true;
       };
