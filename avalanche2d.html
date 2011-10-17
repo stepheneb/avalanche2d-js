@@ -238,8 +238,7 @@
           if (show_graph.checked) graph.add_point(model.averageFolders);
           if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
           if (model.indexOfStep >= 5000) {
-            if (window.paintInterval) window.clearInterval(paintInterval);
-            step_model.elements[1].checked = true;
+            modelStop();
           }
       };
 
@@ -261,10 +260,7 @@
 
         switch(run_mode) {
           case "stop":
-            if (window.paintInterval) window.clearInterval(paintInterval);
-            avalanche2d.displayFolderCanvas(canvas, model);
-            if (!show_visualization.checked) displayStats();
-            graph.new_data(graph_data);
+            modelStop();
             break;
           case "step":
             if (window.paintInterval) window.clearInterval(paintInterval);
@@ -290,6 +286,13 @@
         }
       }
       
+      function modelStop() {
+        if (window.paintInterval) window.clearInterval(paintInterval);
+        avalanche2d.displayFolderCanvas(canvas, model);
+        if (!show_visualization.checked) displayStats();
+        graph.new_data(graph_data);
+      };
+
       step_model.onchange = runModelStep;
       avalanche2d.displayFolderCanvas(canvas, model);
 
