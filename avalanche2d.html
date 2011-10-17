@@ -309,7 +309,7 @@
           step_model.elements[1].checked = true;
         } else {
           start_time = +new Date();
-          modelStepInterval = setInterval('runModelStep()', 0);
+          modelStepInterval = setInterval(runModelStep, 10);
         }
       };
       
