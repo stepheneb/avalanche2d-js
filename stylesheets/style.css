@@ -31,11 +31,11 @@ pre {
 
 /* http://stackoverflow.com/questions/7615009/disable-interpolation-when-scaling-a-canvas */
 canvas {
-  image-rendering: optimizeSpeed;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: optimize-contrast;
-  -ms-interpolation-mode: nearest-neighbor;
+  image-rendering: optimizeSpeed !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: -webkit-optimize-contrast !important;
+  image-rendering: optimize-contrast !important;
+  -ms-interpolation-mode: nearest-neighbor !important;
 }
 
 #chart {
