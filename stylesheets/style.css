@@ -18,7 +18,7 @@ body {
 
 pre {
   margin: 10px 5px 10px 5px;
-  font-size: 80%;
+  font-size: 1em;
   line-height: 1.1em;
   overflow: auto;
 }
