@@ -38,6 +38,14 @@ canvas {
   -ms-interpolation-mode: nearest-neighbor !important;
 }
 
+option {
+  margin: 1px 4px 1px 4px;
+}
+
+fieldset {
+  height: 2.5em;
+}
+
 #chart {
   background-color: #f7f2c5;
   width: 560px;
