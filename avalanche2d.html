@@ -208,6 +208,7 @@
       var folder_data = document.getElementById("folder-data");
 
       var step_model = document.getElementById("step-model");
+      var step_model_inputs = step_model.getElementsByTagName("input")
       
       var show_visualization = document.getElementById("show-visualization");
       var show_graph = document.getElementById("show-graph");
@@ -289,7 +290,7 @@
           avalanche2d.displayFolderCanvas(canvas, model);
         };
         graph.new_data(graph_data);
-        step_model.elements[1].checked = true;
+        step_model_inputs[0].checked = true;
       };
       
       function modelStep() {
@@ -301,7 +302,7 @@
         };
         graph.new_data(graph_data);
         if (model.indexOfStep >= 5000) displayResetWarning();
-        step_model.elements[1].checked = true;
+        step_model_inputs[0].checked = true;
       };
 
       var modelStepIntervalValue = 0;
@@ -309,7 +310,7 @@
       function modelGo() {
         if (model.indexOfStep >= 5000) {
           displayResetWarning();
-          step_model.elements[1].checked = true;
+          step_model_inputs[0].checked = true;
         } else {
           start_time = +new Date();
           modelStepInterval = setInterval(runModelStep, modelStepIntervalValue);
@@ -325,7 +326,7 @@
         step_model_warning.innerHTML = null;
         graph_data = [2];
         graph.new_data(graph_data);
-        step_model.elements[1].checked = true;
+        step_model_inputs[0].checked = true;
       }
 
       function displayResetWarning() {
