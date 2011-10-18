@@ -188,8 +188,10 @@
       var select_array_type = document.getElementById("select-array-type");
       var select_array_type_choices = select_array_type.getElementsByTagName("option")
 
+      var safari = navigator.userAgent.toLowerCase().indexOf('safari') > 0;
+
       if (webgl) {
-        select_array_type.value = "Uint8Array"
+        select_array_type.value = safari ? "regular" : "Uint8Array";
       } else {
         for(var i=2; i < select_array_type_choices.length; i++) {
           select_array_type_choices[i].disabled = true;
