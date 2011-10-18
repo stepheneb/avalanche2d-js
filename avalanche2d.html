@@ -118,10 +118,18 @@
         <li>
           <fieldset>
             <legend>JavaScript Array Type</legend>
-            <form id="choose-array-type">
-              <label><input type="radio" name="array" value="regular"> Regular</input></label>
-              <label><input type="radio" name="array" value="typed" disabled> Typed</input></label>
-            </form>
+            <select id="select-array-type">
+              <option value="Regular">regular</option>
+              <option value="" disabled="disabled">Typed Arrays ...</option>
+              <option value="Uint8Array">Uint8Array</option>
+              <option value="Uint16Array">Uint16Array</option>
+              <option value="Uint32Array">Uint32Array</option>
+              <option value="Int8Array">Int8Array</option>
+              <option value="Int16Array">Int16Array</option>
+              <option value="Int32Array">Int32Array</option>
+              <option value="Float32Array">Float32Array</option>
+              <option value="Float64Array">Float64Array</option>
+            </select>
           </fieldset>
         </li>
         <li>
@@ -129,7 +137,7 @@
             <fieldset>
               <legend>Rendering</legend>
               <label><input id="show-visualization" type="checkbox" checked/> Visualization</label>
-              <label><input id="show-graph" type="checkbox" checked/> Graph</label>
+              <label><input id="show-graph" type="checkbox" /> Graph</label>
               <label><input id="show-data-table" type="checkbox"/> Folder-Desk Array</label>
             </fieldset>
           </form>
@@ -176,14 +184,16 @@
     function() {
 
       var webgl = !!window.WebGLRenderingContext;
-      var choose_array_type = document.getElementById("choose-array-type");
+
+      var select_array_type = document.getElementById("select-array-type");
+      var select_array_type_choices = select_array_type.getElementsByTagName("option")
 
       if (webgl) {
-        choose_array_type.elements[1].disabled = false;
-        choose_array_type.elements[0].checked = true;
+        select_array_type.value = "Uint8Array"
       } else {
-        choose_array_type.elements[1].disabled = true;
-        choose_array_type.elements[0].checked = true;
+        for(var i=2; i++; I < select_array_type_choices.length) {
+          select_array_type_choices[i].disabled = true;
+        }
       };
 
       // avalanche2d.setupColorDivs();
@@ -193,17 +203,13 @@
       
       var model_options = { model: { nx: 100, ny: 100, initial_value: 2 }};
 
-      function arrayTypeChange() {
-        if (choose_array_type.elements[0].checked) {
-          array_selection = "regular";
-        } else {
-          array_selection = "typed";
-        }
+      function selectArrayTypeChange() {
+        array_selection = select_array_type.value;
         model = new avalanche2d.Model(model_options, array_selection);
       };
       
-      choose_array_type.onchange = arrayTypeChange;
-      choose_array_type.onchange();
+      select_array_type.onchange = selectArrayTypeChange;
+      select_array_type.onchange();
 
       var folder_data = document.getElementById("folder-data");
 

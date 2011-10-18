@@ -26,10 +26,35 @@ Array.prototype.shuffle = function() {
 function createArray(size, fill) {
     fill = fill || 0;
     var a;
-    if (avalanche2d.array_type === "typed") {
-        a = new Float32Array(size);
-    } else {
+    if (avalanche2d.array_type === "regular") {
         a = new Array(size);
+    } else {
+      switch(avalanche2d.array_type) {
+      case "Float64Array":
+        a = new Float64Array(size);
+        break;
+      case "Float32Array":
+        a = new Float32Array(size);
+        break;
+      case "Int32Array":
+        a = new Int32Array(size);
+        break;
+      case "Int16Array":
+        a = new Int16Array(size);
+        break;
+      case "Int8Array":
+        a = new Int8Array(size);
+        break;
+      case "Uint32Array":
+        a = new Uint32Array(size);
+        break;
+      case "Uint16Array":
+        a = new Uint16Array(size);
+        break;
+      case "Uint8Array":
+        a = new Uint8Array(size);
+        break;
+      };
     };
     if (a[size-1] !== fill) {
       for (var i = 0; i < size; i++) {
