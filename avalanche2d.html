@@ -20,6 +20,26 @@
     </style>
 
     <script type="text/javascript">
+      // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+      window.requestAnimFrame = (function() {
+        return window.requestAnimationFrame ||
+               window.webkitRequestAnimationFrame ||
+               window.mozRequestAnimationFrame ||
+               window.oRequestAnimationFrame ||
+               window.msRequestAnimationFrame ||
+               function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+                 return window.setTimeout(callback, 1000/60);
+               };
+      })();
+      window.cancelRequestAnimFrame = (function() {
+        return window.cancelCancelRequestAnimationFrame ||
+               window.webkitCancelRequestAnimationFrame ||
+               window.mozCancelRequestAnimationFrame ||
+               window.oCancelRequestAnimationFrame ||
+               window.msCancelRequestAnimationFrame ||
+               window.clearTimeout;
+      })();
+      
       // a simple JavaScript source code loader
       function myRequire(src, callback){
         if (src.constructor == Array) {
@@ -93,7 +113,7 @@
   </div>
   <div id="content">
     <div id="webglCanvasContainer">
-      <ul class="hlist">
+      <ul id="visualizations" class="hlist">
         <li>
           <p>Avalanche-JS Model: Rendered using an HTML5 canvas</p>
           <canvas id="patchesCanvas"></canvas>
@@ -112,7 +132,6 @@
               <label><input type="radio" name="step" value="step"> Step</input></label>
               <label><input type="radio" name="step" value="go"> Go</input></label>
               <label><input type="radio" name="step" value="reset"> Reset</input></label>
-              <!-- <label><input type="radio" name="step" value="reset"> Reset</input></label> -->
             </fieldset>
           </form>
         </li>
@@ -240,8 +259,9 @@
       var graph_data = [2];
       var graph = grapher.graph(graph_data);
 
-      window.runModelStep = function() {
+      function runModelStep() {
           if (run_mode == 'stop') return
+          animateRequest = requestAnimFrame(runModelStep, visualizations);
           step_start = +new Date(sample_time);
           step_duration = 0;
           while (step_duration < 15) {
@@ -268,7 +288,7 @@
           sprintf(", folders: %2.3f (ave)", model.averageFolders);
       };
       
-      window.modelStepInterval;
+      var modelRunRequest;
 
       var display_method;
       
@@ -293,7 +313,7 @@
       
       function modelStop() {
         run_mode = "stop";
-        if (window.modelStepInterval) window.clearInterval(modelStepInterval);
+        if (modelRunRequest) cancelRequestAnimFrame(modelRunRequest);
         if (!show_visualization.checked) {
           displayStats();
           avalanche2d.displayFolderCanvas(canvas, model);
@@ -303,7 +323,7 @@
       };
       
       function modelStep() {
-        if (window.modelStepInterval) window.clearInterval(modelStepInterval);
+        if (modelRunRequest) cancelRequestAnimFrame(modelRunRequest);
         runModelStep();
         if (!show_visualization.checked) {
           displayStats();
@@ -322,12 +342,12 @@
           step_model_inputs[0].checked = true;
         } else {
           start_time = +new Date();
-          modelStepInterval = setInterval(runModelStep, modelStepIntervalValue);
+          modelRunRequest = requestAnimFrame(runModelStep, canvas);
         }
       };
       
       function modelReset() {
-        if (window.modelStepInterval) window.clearInterval(modelStepInterval);
+        if (modelRunRequest) cancelRequestAnimFrame(modelRunRequest);
         model.reset();
         avalanche2d.displayFolderCanvas(canvas, model);
         folder_data.innerHTML = '';
