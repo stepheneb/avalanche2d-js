@@ -233,6 +233,7 @@
       select_array_type.onchange = selectArrayTypeChange;
       select_array_type.onchange();
 
+      var visualizations = document.getElementById("visualizations");
       var folder_data = document.getElementById("folder-data");
 
       var step_model = document.getElementById("step-model");
@@ -259,32 +260,12 @@
       var graph_data = [2];
       var graph = grapher.graph(graph_data);
 
-      function runModelStep() {
-          if (run_mode == 'stop') return
-          animateRequest = requestAnimFrame(runModelStep, visualizations);
-          step_start = +new Date(sample_time);
-          step_duration = 0;
-          while (step_duration < 15) {
-            last_sample_time = +new Date(sample_time);
-            model.nextStep();
-            graph_data.push(model.averageFolders);
-            if (show_visualization.checked) avalanche2d.displayFolderCanvas(canvas, model);
-            if (show_graph.checked) graph.add_point(model.averageFolders);
-            if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
-            sample_time = +new Date();
-            sample_duration = sample_time - last_sample_time;
-            step_duration = sample_time - step_start;
-            if (show_visualization.checked) displayStats();
-            if (model.indexOfStep >= 5000) return modelStop();
-          }
-      };
-
       function displayStats() {
         average_sample_rate = model.indexOfStep / (sample_time - start_time) * 1000
         step_count.textContent = 'avalanches: ' + model.indexOfStep + 
           sprintf(", rate: %5.1f (steps/s)", average_sample_rate) +
           sprintf(", last sample time: %3f (ms)", sample_duration) +
-          sprintf(", setInterval: %2f", modelStepIntervalValue) +
+          sprintf(", loop compute maximum: %2f", model_loop_time) +
           sprintf(", folders: %2.3f (ave)", model.averageFolders);
       };
       
@@ -313,6 +294,7 @@
       
       function modelStop() {
         run_mode = "stop";
+        running = false;
         if (modelRunRequest) cancelRequestAnimFrame(modelRunRequest);
         if (!show_visualization.checked) {
           displayStats();
@@ -324,6 +306,7 @@
       
       function modelStep() {
         if (modelRunRequest) cancelRequestAnimFrame(modelRunRequest);
+        running = false;
         runModelStep();
         if (!show_visualization.checked) {
           displayStats();
@@ -334,15 +317,14 @@
         step_model_inputs[0].checked = true;
       };
 
-      var modelStepIntervalValue = 0;
-
       function modelGo() {
+        running = true;
         if (model.indexOfStep >= 5000) {
           displayResetWarning();
           step_model_inputs[0].checked = true;
         } else {
           start_time = +new Date();
-          modelRunRequest = requestAnimFrame(runModelStep, canvas);
+          modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
         }
       };
       
@@ -385,6 +367,37 @@
       
       show_data_table.onchange = displayFolderTable;
       
+      function runModelStep() {
+          last_sample_time = +new Date(sample_time);
+          model.nextStep();
+          graph_data.push(model.averageFolders);
+          if (show_visualization.checked) avalanche2d.displayFolderCanvas(canvas, model);
+          if (show_graph.checked) graph.add_point(model.averageFolders);
+          if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
+          sample_time = +new Date();
+          sample_duration = sample_time - last_sample_time;
+          if (show_visualization.checked) displayStats();
+      };
+
+      var model_loop_time = 15;
+
+      function runModelLoop(){
+        if (model.indexOfStep < 5000 && running) {
+          loop_start = +new Date();
+          modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
+          runModelStep();
+          loop_time = +new Date()
+          loop_elapsed = loop_time - loop_start;
+          while (loop_elapsed < model_loop_time) {
+            runModelStep();
+            loop_time = +new Date()
+            loop_elapsed = loop_time - loop_start;
+          }
+        } else {
+          modelStop()
+        }
+      };
+
     });
   };
 </script>
