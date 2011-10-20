@@ -400,7 +400,7 @@
           if (show_visualization.checked) displayStats();
       };
 
-      var model_loop_time = 15;
+      var model_loop_time = 13;
 
       function runModelLoop(){
         if (model.indexOfStep < 5000 && running) {
@@ -414,13 +414,16 @@
             runModelStep();
             loop_time = +new Date()
             loop_elapsed = loop_time - loop_start;
-            if (model.indexOfStep >= 5000) break;
-          }
-          // if (animmation_loop_timing > model_loop_time) {
-          //   model_loop_time++;
-          // } else {
-          //   model_loop_time--;
-          // };
+            if (model.indexOfStep >= 5000) {
+              running = false;
+              break;
+            };
+          };
+          if (animmation_loop_timing > (model_loop_time+5)) {
+            model_loop_time++;
+          } else {
+            model_loop_time--;
+          };
           previous_loop_start = loop_start;
         } else {
           modelStop()
