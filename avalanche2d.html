@@ -170,7 +170,7 @@
         <li id="step-model-warning"></li>
       </ul>
     </div>
-    <pre id="step-count"></pre>
+    <div id="stats"></div>
     <div id="info">
       <h3>About the Graph Interface built with the JavaScript library 
       <a href='http://mbostock.github.com/d3/'>d3.js</a></h3>
@@ -253,7 +253,7 @@
       var show_data_table = document.getElementById("show-data-table");
       
       var step_model_warning = document.getElementById("step-model-warning");
-      var step_count = document.getElementById("step-count");
+      var stats = document.getElementById("stats");
 
       var canvas = document.getElementById("patchesCanvas");
       var run_mode;
@@ -273,11 +273,11 @@
 
       function displayStats() {
         average_sample_rate = model.indexOfStep / (sample_time - start_time) * 1000
-        step_count.textContent = 'avalanches: ' + model.indexOfStep + 
+        stats.textContent = 'avalanches: ' + model.indexOfStep + 
           sprintf(", rate: %5.1f (steps/s)", average_sample_rate) +
-          sprintf(", last sample time: %2f (ms)", sample_duration) +
-          sprintf(", loop compute maximum: %2f", model_loop_time) +
-          sprintf(", anim loop timing: %2f", animmation_loop_timing) +
+          sprintf(", last sample time: %3f (ms)", sample_duration) +
+          sprintf(", loop compute maximum: %3f", model_loop_time) +
+          sprintf(", anim loop timing: %3f", animmation_loop_timing) +
           sprintf(", folders: %2.3f (ave)", model.averageFolders);
       };
       
@@ -351,7 +351,7 @@
         model.reset();
         avalanche2d.displayFolderCanvas(canvas, model);
         folder_data.innerHTML = '';
-        step_count.innerHTML = '';
+        stats.innerHTML = '';
         step_model_warning.innerHTML = null;
         graph.hide_canvas();
         graph.clear_canvas();

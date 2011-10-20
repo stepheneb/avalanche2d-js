@@ -23,10 +23,10 @@ pre {
   overflow: auto;
 }
 
-#step-count {
+#stats {
   margin: 10px 5px 10px 30px;
-  font-size: 1.0em;
-  font-weight: bold;
+  font: 0.8em bold;
+  font-family: "New Courier", Courier, monospace;
 }
 
 /* http://stackoverflow.com/questions/7615009/disable-interpolation-when-scaling-a-canvas */
