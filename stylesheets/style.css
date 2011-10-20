@@ -149,7 +149,7 @@ h4 {
   font-size: 0.9em;
   font-weight: bold;
   font-style: italic;
-  margin: 0px 60px 0px 30px;
+  margin: 4px 100px 8px 30px;
   padding: 2px 20px;
   background: #f8e0e0
 }
@@ -704,7 +704,7 @@ fieldset label  {
     font-size: 1.0em;
     font-style: italic;
     line-height: 1.2em;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 #info {
