@@ -401,6 +401,7 @@
       };
 
       var model_loop_time = 13;
+      var model_loop_bump = model_loop_time / 5;
 
       function runModelLoop(){
         if (model.indexOfStep < 5000 && running) {
@@ -419,11 +420,12 @@
               break;
             };
           };
-          if (animmation_loop_timing > (model_loop_time+2) && (model_loop_time < 40)) {
+          if (animmation_loop_timing > (model_loop_time+model_loop_bump)) {
             model_loop_time++;
           } else {
             model_loop_time--;
           };
+          model_loop_bump = model_loop_time / 5;
           previous_loop_start = loop_start;
         } else {
           modelStop()
