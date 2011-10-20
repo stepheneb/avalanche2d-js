@@ -409,6 +409,7 @@
             runModelStep();
             loop_time = +new Date()
             loop_elapsed = loop_time - loop_start;
+            if (model.indexOfStep >= 5000) break;
           }
         } else {
           modelStop()
