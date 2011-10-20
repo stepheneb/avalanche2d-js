@@ -145,6 +145,15 @@ h4 {
     text-align: left;
 }
 
+#warning {
+  font-size: 0.9em;
+  font-weight: bold;
+  font-style: italic;
+  margin: 0px 60px 0px 30px;
+  padding: 2px 20px;
+  background: #f8e0e0
+}
+
 #logo {
     position: absolute;
     top: 20px;
