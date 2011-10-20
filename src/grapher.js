@@ -32,6 +32,9 @@
       hide_canvas();
     };
     
+    graph.clear_canvas = function() {
+      clear_canvas();
+    };
 
     var size = [500, 350],
         padding = [20, 30, 20, 40], // top right bottom left
@@ -158,6 +161,11 @@
       gctx.closePath();
       gctx.stroke();
       // FIXME: FireFox bug
+    };
+
+    function clear_canvas() {
+      gctx.fillStyle = "rgba(0,255,0, 0.05)";
+      gctx.fillRect(0, 0, gcanvas.width, gcanvas.height);
     };
     
     function show_canvas() {
