@@ -266,6 +266,8 @@
       var average_sample_rate;
       var foldersRunningAverage;
       
+      var loop_start, loop_time, loop_elapsed, previous_loop_start, animmation_loop_timing;
+      
       var graph_data = [2];
       var graph = grapher.graph(graph_data);
 
@@ -273,8 +275,9 @@
         average_sample_rate = model.indexOfStep / (sample_time - start_time) * 1000
         step_count.textContent = 'avalanches: ' + model.indexOfStep + 
           sprintf(", rate: %5.1f (steps/s)", average_sample_rate) +
-          sprintf(", last sample time: %3f (ms)", sample_duration) +
+          sprintf(", last sample time: %2f (ms)", sample_duration) +
           sprintf(", loop compute maximum: %2f", model_loop_time) +
+          sprintf(", anim loop timing: %2f", animmation_loop_timing) +
           sprintf(", folders: %2.3f (ave)", model.averageFolders);
       };
       
@@ -300,7 +303,7 @@
             break;
         }
       };
-      
+
       function modelStop() {
         run_mode = "stop";
         running = false;
@@ -338,6 +341,7 @@
           if (show_graph.checked) {
             graph.show_canvas();
           };
+          previous_loop_start = +new Date();
           modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
         }
       };
@@ -401,6 +405,7 @@
       function runModelLoop(){
         if (model.indexOfStep < 5000 && running) {
           loop_start = +new Date();
+          animmation_loop_timing = loop_start - previous_loop_start;
           modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
           runModelStep();
           loop_time = +new Date()
@@ -411,6 +416,12 @@
             loop_elapsed = loop_time - loop_start;
             if (model.indexOfStep >= 5000) break;
           }
+          // if (animmation_loop_timing > model_loop_time) {
+          //   model_loop_time++;
+          // } else {
+          //   model_loop_time--;
+          // };
+          previous_loop_start = loop_start;
         } else {
           modelStop()
         }
