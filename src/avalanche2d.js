@@ -70,9 +70,7 @@ avalanche2d.config = {
 
 avalanche2d.Model = function(options, array_type) {
 
-    if (!array_type) {
-        array_type = "regular";
-    };
+    if (!array_type) array_type = "regular";
     avalanche2d.array_type = array_type;
 
     if (!options || options === {}) {
@@ -81,9 +79,7 @@ avalanche2d.Model = function(options, array_type) {
         this.options = options;
     }
 
-    if (!this.options.model) {
-        this.options.model = {};
-    };
+    if (!this.options.model) this.options.model = {};
 
     this.nx = options.model.nx;
     this.ny = options.model.ny;
@@ -120,9 +116,7 @@ avalanche2d.Model.prototype.nextStep = function() {
 avalanche2d.copyArray = function(destination, source) {
     var source_length = source.length;
     var destination_length = destination.length;
-    for (i = 0; i < source_length; i++) {
-        destination[i] = source[i];
-    }
+    for (i = 0; i < source_length; i++) destination[i] = source[i];
 };
 
 /** @return true if x is between a and b. */
