@@ -15,6 +15,23 @@
     graph.add_point = function(p) {
       add_point(p);
     };
+    
+    graph.add_canvas_point = function(p) {
+      add_canvas_point(p);
+    };
+    
+    graph.initialize_canvas = function() {
+      initialize_canvas();
+    };
+    
+    graph.show_canvas = function() {
+      show_canvas();
+    };
+
+    graph.hide_canvas = function() {
+      hide_canvas();
+    };
+    
 
     var size = [500, 350],
         padding = [20, 30, 20, 40], // top right bottom left
@@ -42,6 +59,10 @@
         downy = Math.NaN,
         dragged = null,
         selected = points[0];
+    
+    var plot, gcanvas, gctx;
+    
+    var chart = document.getElementById("chart");
  
     var vis = d3.select("#chart").append("svg:svg")
         .attr("width", size[0] + padding[3] + padding[1])
@@ -69,6 +90,8 @@
     vis.append("svg:path")
         .attr("class", "line")
         .attr("d", line(points));
+
+    initialize_canvas();
 
     // variables for speeding up dynamic plotting
     var line_path = vis.select("path")[0][0];
@@ -118,23 +141,60 @@
       points.push(point);
       var newx = x.call(self, len, len);
       var newy = y.call(self, p, len);
-
-      // adding circle points with dom manipulation
-      // var c2 = cpoint.cloneNode(false);
-      // c2.setAttribute("cx", newx);
-      // c2.setAttribute("cy", newy);
-      // vis_node.appendChild(c2);
-
-      // adding circle points with d3
-      // vis.append("svg:circle").attr('cx',newx).attr('cy',newy).attr('r',1)
-      
-      // adding new line segments with dom manipulation
       line_seglist.appendItem(line_path.createSVGPathSegLinetoAbs(newx, newy));
-
-      // adding new line segments with d3 and custom attribute generation
-      // vis.select("path").attr("d", generate_path_attribute([point], x, y));
     };
     
+    function add_canvas_point(p) {
+      var len = points.length;
+      var oldx = x.call(self, len-1, len-1);
+      var oldy = y.call(self, points[len-1].y, len-1);
+      var point = { x: len, y: p };
+      points.push(point);
+      var newx = x.call(self, len, len);
+      var newy = y.call(self, p, len);
+      gctx.beginPath();
+      gctx.moveTo(oldx, oldy);
+      gctx.lineTo(newx, newy);
+      gctx.closePath();
+      gctx.stroke();
+      // FIXME: FireFox bug
+    };
+    
+    function show_canvas() {
+      gcanvas.style.zIndex = 100;
+    };
+
+    function hide_canvas() {
+      gcanvas.style.zIndex = -100;
+    };
+
+    function initialize_canvas() {
+      plot = {}
+      plot.rect = chart.children[0].getElementsByTagName("rect")[0]
+      plot.width = plot.rect.width['baseVal'].value
+      plot.height = plot.rect.height['baseVal'].value
+      plot.left = plot.rect.getCTM().e
+      plot.top = plot.rect.getCTM().f
+
+      gcanvas = document.createElement('canvas');
+      chart.appendChild(gcanvas);
+      gcanvas.style.position = 'absolute'
+      gcanvas.width = plot.width;
+      gcanvas.height = plot.height;
+      gcanvas.offsetLeft = plot.left;
+      gcanvas.offsetTop = plot.top;
+      gcanvas.style.left = plot.left + 'px'
+      gcanvas.style.top = plot.top + 'px'
+      gctx = gcanvas.getContext( '2d' );
+      gctx.globalCompositeOperation = "destination-atop";
+      gctx.lineWidth = 1;
+      gctx.fillStyle = "rgba(0,255,0, 0.05)";
+      gctx.fillRect(0, 0, gcanvas.width, gcanvas.height);
+      gctx.strokeStyle = "rgba(255,65,0, 1.0)";
+      gcanvas.style.border = 'solid 1px red'
+      gcanvas.style.zIndex = -100
+    };
+
     function update() {
       var lines = vis.select("path").attr("d", line(points));
  

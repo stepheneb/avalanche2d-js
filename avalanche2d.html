@@ -157,7 +157,7 @@
             <fieldset>
               <legend>Rendering</legend>
               <label><input id="show-visualization" type="checkbox" checked/> Visualization</label>
-              <label><input id="show-graph" type="checkbox" /> Graph</label>
+              <label><input id="show-graph" type="checkbox" checked/> Graph</label>
               <label><input id="show-data-table" type="checkbox"/> Folder-Desk Array</label>
             </fieldset>
           </form>
@@ -300,6 +300,7 @@
           displayStats();
           avalanche2d.displayFolderCanvas(canvas, model);
         };
+        graph.hide_canvas();
         graph.new_data(graph_data);
         step_model_inputs[0].checked = true;
       };
@@ -312,6 +313,7 @@
           displayStats();
           avalanche2d.displayFolderCanvas(canvas, model);
         };
+        graph.hide_canvas();
         graph.new_data(graph_data);
         if (model.indexOfStep >= 5000) displayResetWarning();
         step_model_inputs[0].checked = true;
@@ -324,6 +326,10 @@
           step_model_inputs[0].checked = true;
         } else {
           start_time = +new Date();
+          if (show_graph.checked) {
+            graph.initialize_canvas();
+            graph.show_canvas();
+          };
           modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
         }
       };
@@ -335,6 +341,7 @@
         folder_data.innerHTML = '';
         step_count.innerHTML = '';
         step_model_warning.innerHTML = null;
+        graph.hide_canvas();
         graph_data = [2];
         graph.new_data(graph_data);
         step_model_inputs[0].checked = true;
@@ -372,7 +379,8 @@
           model.nextStep();
           graph_data.push(model.averageFolders);
           if (show_visualization.checked) avalanche2d.displayFolderCanvas(canvas, model);
-          if (show_graph.checked) graph.add_point(model.averageFolders);
+          // if (show_graph.checked) graph.add_point(model.averageFolders);
+          if (show_graph.checked) graph.add_canvas_point(model.averageFolders);
           if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
           sample_time = +new Date();
           sample_duration = sample_time - last_sample_time;
@@ -397,7 +405,6 @@
           modelStop()
         }
       };
-
     });
   };
 </script>

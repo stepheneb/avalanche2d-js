@@ -50,7 +50,8 @@ fieldset {
   background-color: #f7f2c5;
   width: 560px;
   height: 400px;
-  border: solid 1px #cccccc; }
+  border: solid 1px #cccccc; 
+  position: relative; }
 
 .line {
   fill: none;
