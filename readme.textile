@@ -1,6 +1,6 @@
 h1. "Avalanche2D-JS":http://stepheneb.github.com/avalanche2d-js/avalanche2d.html
 
-A partial "JavaScript port":http://stepheneb.github.com/avalanche2d-js/avalanche2d.html of Bob Tinker's "NetLogo":http://ccl.northwestern.edu/netlogo/ model "Bureaucrats.v6":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo exploring "Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
+A partial "JavaScript adaptation":http://stepheneb.github.com/avalanche2d-js/avalanche2d.html of Bob Tinker's "NetLogo":http://ccl.northwestern.edu/netlogo/ model "Bureaucrats.v6":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo exploring "Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
 
 bq. The mathematics of avalanche size and frequency follows a power law that can be simulated to
     a first approximation by any system that exhibits self-organized criticality (SOC). In "How
@@ -24,7 +24,7 @@ I'm working on new ways of being able to create and run models in html5 browser-
 
 While it would take a good deal more work to make a whole authoring environment that would be effective and productive for non-professional programmers I think this is a very successful proof-of-concept. At this point I think it would be relatively easy to convert a model that had turtles also.
 
-Seth Tisue, the lead NetLogo developer contributed "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo a simplified re-write of "Bureaucrats.v6":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo that runs about twice as fast. "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo is more appropriate to use when comparing performance of a NetLogo model with this JavaScript adaptation.
+Seth Tisue, the lead NetLogo developer contributed "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo a simplified re-write of "Bureaucrats.v6":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo that runs about 20 times as fast. "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo is more appropriate to use when comparing performance of a NetLogo model with this JavaScript adaptation.
 
 Testing on Oct 20 2011 show this JavaScript adaptation runs about four times faster on Chrome than "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo when displaying folders and graph and about 11 times faster running just the computational model. See **Benchmarks** section below.
 
@@ -39,23 +39,23 @@ h2. Benchmarks
 
 h3. Time for modeling and rendering to both the model canvas and the real-time graph rendering using a Canvas overlay over the D3.js SVG graph. [1]
 
-|_. Mac OS X 10.6.8 [2]        |_\2>. ave rate (steps/s) for 5000 steps |
-|_. Browser                    |_.             |_. graph and canvas off |
-| Chrome 14.0.835.186          |>.   1719      |>.          12920       |
-| Safari v5.1.1 (6534.51.22)   |>.    554      |>.           4022       |
-| FireFox 7.0.1 [3]            |>.    229      |>.           2994       |
-|                              |               |                        |
-|_. Windows 7 in VirtualBox    |_\2>.                                   |
-| Chrome 14.0.835.202          |>.    683      |>.          19231       |
-| IE v9.0.8112.16421 [3]       |>.    440      |>.           4995       |
-| FireFox 7.0.1 [3]            |>.    285      |>.           3477       |
-| Safari v5.1.1 (7534.51.22)   |>.    248      |>.            678       |
-|                              |               |                        |
-|_. NetLogo 5.0RC2             |_\2>.                                   |
-| Bureaucrats-fast             |>.    448      |>.           1172       |
-|                              |               |                        |
-|_. Tablets and SmartPhones    |_\2>.                                   |
-| iPad2, iOS 4.3.1             |>.     60      |>.            268       |
+|_. Mac OS X 10.6.8 [2]        |_\2>. ave rate (model-steps/s) for 5000 steps |
+|_. Browser                    |_.                   |_. graph/canvas off     |
+| Chrome 14.0.835.186          |=.      1719         |=.          12920       |
+| Safari v5.1.1 (6534.51.22)   |=.       554         |=.           4022       |
+| FireFox 7.0.1 [3]            |=.       229         |=.           2994       |
+|                              |                     |                        |
+|_. Windows 7 in VirtualBox    |_\2>.                                         |
+| Chrome 14.0.835.202          |=.       683         |=.          19231       |
+| IE v9.0.8112.16421 [3]       |=.       440         |=.           4995       |
+| FireFox 7.0.1 [3]            |=.       285         |=.           3477       |
+| Safari v5.1.1 (7534.51.22)   |=.       248         |=.            678       |
+|                              |                     |                        |
+|_. NetLogo 5.0RC2             |_\2>.                                         |
+| Bureaucrats-fast             |=.       448         |=.           1172       |
+|                              |                     |                        |
+|_. Tablets and SmartPhones    |_\2>.                                         |
+| iPad2, iOS 4.3.1             |=.        60         |=.            268       |
 
 fn1. _Data collected October 21, 2011_
 
