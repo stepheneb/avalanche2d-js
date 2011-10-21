@@ -183,6 +183,7 @@
       </ul>
     </div>
     <div id="stats"></div>
+    <div id="aloop-output"></div>
     <div id="info">
       <h3>About the Graph Interface built with the JavaScript library 
       <a href='http://mbostock.github.com/d3/'>d3.js</a></h3>
@@ -443,6 +444,36 @@
           modelStop()
         }
       };
+      
+      var aloop = 0;
+      var aloop_max_count = 20;
+      var aloop_timings= [];
+      var aloop_output = document.getElementById("aloop-output");
+      
+      function measureAnimmationLoop() {
+        if (aloop <= aloop_max_count) {
+          loop_time = +new Date();
+          requestAnimFrame(measureAnimmationLoop, visualizations);
+          aloop_timings[aloop] = loop_time - loop_start;
+          aloop++;
+          loop_start = loop_time;
+        } else {
+          var str = "Animation loop timing measurements at page startup: ";
+          aloop_timings.shift();
+          for(i = 0; i < aloop_max_count; i++) {
+            str += (aloop_timings[i] + " ");
+          }
+          aloop_output.innerHTML = str;
+        }
+      };
+      
+      function startAnimmationLoopMeasurement() {
+        aloop = 0;
+        aloop_timings = [];
+        loop_start = +new Date();
+        requestAnimFrame(measureAnimmationLoop, visualizations);
+      };
+      startAnimmationLoopMeasurement();
     });
   };
 </script>
