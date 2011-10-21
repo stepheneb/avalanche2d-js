@@ -38,20 +38,18 @@ h2. References
 
 h2. Benchmarks
 
-h3. Time for modeling and rendering to both the model canvas and the real-time graph rendering using a Canvas overlay over the D3.js SVG graph.
+h3. Time for modeling and rendering to both the model canvas and the real-time graph rendering using a Canvas overlay over the D3.js SVG graph [1].
 
-_MacBook Pro, 2.66 GHz Intel Core i7, Mac OS X 10.6.8_
-
-|_. Mac OS X 10.6.8            |_\2>. ave rate (steps/s) for 5000 steps |
+|_. Mac OS X 10.6.8 [2]        |_\2>. ave rate (steps/s) for 5000 steps |
 |_. Browser                    |_.             |_. graph and canvas off |
 | Chrome 14.0.835.186          |     1719      |            12920       |
 | Safari v5.1.1 (6534.51.22)   |      554      |             4022       |
-| FireFox 7.0.1 [1]            |      229      |             2994       |
+| FireFox 7.0.1 [3]            |      229      |             2994       |
 |                              |               |                        |
 |_. Windows 7 in VirtualBox    |_\2>.                                   |
 | Chrome 14.0.835.202          |      683      |            19231       |
-| IE v9.0.8112.16421 [1]       |      440      |             4995       |
-| FireFox 7.0.1 [1]            |      285      |             3477       |
+| IE v9.0.8112.16421 [3]       |      440      |             4995       |
+| FireFox 7.0.1 [3]            |      285      |             3477       |
 | Safari v5.1.1 (7534.51.22)   |      248      |              678       |
 |                              |               |                        |
 |_. NetLogo 5.0RC2             |_\2>.                                   |
@@ -61,6 +59,8 @@ _MacBook Pro, 2.66 GHz Intel Core i7, Mac OS X 10.6.8_
 |_. Tablets and SmartPhones    |_\2>.                                   |
 | iPad2, iOS 4.3.1             |       60      |              268       |
 
-_Data collected October 21, 2011_
+fn1. _Data collected October 21, 2011_
 
-fn1. There is a "Canvas-related bug in FireFox":https://bugzilla.mozilla.org/show_bug.cgi?id=695959 which prevents the display of data in the graph while the model is running. This issue is also present in IE9.
+fn2. _MacBook Pro, 2.66 GHz Intel Core i7, Mac OS X 10.6.8_
+
+fn3. _There is a "Canvas-related bug in FireFox":https://bugzilla.mozilla.org/show_bug.cgi?id=695959 which prevents the display of data in the graph while the model is running. This issue is also present in IE9.__
