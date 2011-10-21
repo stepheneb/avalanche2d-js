@@ -45,16 +45,15 @@ h3. Time for modeling and rendering to both the model canvas and the graph rende
 | Chrome 14.0.835.186          |     1719      |            12920       |
 | Safari v5.1.1 (6534.51.22)   |      554      |             4022       |
 | FireFox 7.0.1                |      229      |             2994       |
-
-|_. Windows 7 in VirtualBox    |_\>.  ave rate (steps/s) for 5000 steps |
-|_. Browser                    |_. on          |_. graph and canvas off |
-| Safari v5.1.1 (7534.51.22)   |               |                        |
-| Chrome 14.0.835.202          |               |                        |
-| FireFox 7.0.1                |               |                        |
-| IE v9.0.8112.16421           |               |                        |
-
-|_. NetLogo 5.0RC2             |_\2>.  ave rate (steps/s) for 5000 steps |
+|                              |               |                        |
+|_. Windows 7 in VirtualBox    |_\2>.                                   |
+| Chrome 14.0.835.202          |      683      |            19231       |
+| IE v9.0.8112.16421           |      440      |             4995       |
+| FireFox 7.0.1                |      285      |             3477       |
+| Safari v5.1.1 (7534.51.22)   |      248      |              678       |
+|                              |               |                        |
+|_. NetLogo 5.0RC2             |_\2>.                                   |
 |_.                            |_. on          |_. graph and canvas off |
-| Bureaucrats-fast             |        57     |              1786      |
+| Bureaucrats-fast             |       57      |             1786       |
 
 _All these tests were run on a MacBook Pro, 2.66 GHz Intel Core i7, Mac OS X 10.6.8 on October 21, 2011._
