@@ -357,6 +357,7 @@
           previous_loop_start = +new Date();
           initial_model_loop_time = model_loop_time;
           model_loop_goal = model_loop_time * model_loop_bump_factor;
+          animmation_loop_timing = aloop_minimum;
           modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
         }
       };
