@@ -1,3 +1,4 @@
+globals [total]
 patches-own [n]
 
 to benchmark
@@ -13,6 +14,7 @@ to setup
     set n 2
     colorize
   ]
+  set total 2 * count patches
   reset-ticks
 end
 
@@ -20,15 +22,18 @@ to go
   let active-patches patch-set one-of patches
   ask active-patches [
     set n n + 1
+    set total total + 1
     colorize
   ]
   while [any? active-patches] [
     let overloaded-patches active-patches with [n > 3]
     ask overloaded-patches [
       set n n - 4
+      set total total - 4
       colorize
       ask neighbors4 [
         set n n + 1
+        set total total + 1
         colorize
       ]
     ]
@@ -120,7 +125,7 @@ true
 true
 "" "if not plot? [ stop ]"
 PENS
-"average" 1.0 0 -16777216 true "" "plotxy ticks mean [N] of patches"
+"average" 1.0 0 -16777216 true "" "plotxy ticks (total / count patches)"
 
 SWITCH
 40
