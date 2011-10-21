@@ -449,7 +449,7 @@
           if (animmation_loop_timing > model_loop_goal && loop_elapsed < model_loop_goal) {
             model_loop_time++;
           } else {
-            model_loop_time--;
+            if (model_loop_goal > aloop_minimum) model_loop_time--;
           };
           model_loop_goal = model_loop_time * model_loop_bump_factor;
           previous_loop_start = loop_start;
@@ -460,7 +460,9 @@
       
       var aloop = 0;
       var aloop_max_count = 20;
-      var aloop_timings= [];
+      var aloop_timings = [];
+      var aloop_average = 0;
+      var aloop_minimum = 16;
       var aloop_output = document.getElementById("aloop-output");
       
       function measureAnimmationLoop() {
@@ -471,12 +473,10 @@
           aloop++;
           loop_start = loop_time;
         } else {
-          var str = "Animation loop timing measurements at page startup: ";
           aloop_timings.shift();
-          for(i = 0; i < aloop_max_count; i++) {
-            str += (aloop_timings[i] + " ");
-          }
-          aloop_output.innerHTML = str;
+          aloop_minimum = Math.min.apply(null, aloop_timings)
+          var str = "Animation loop timing measurements at page startup: ";
+          aloop_output.innerHTML = aloop_timings.join(", ");
         }
       };
       
