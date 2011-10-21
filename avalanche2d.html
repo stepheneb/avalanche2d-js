@@ -419,10 +419,8 @@
           model.nextStep();
           graph_data.push(model.averageFolders);
           if (show_graph.checked) graph.add_canvas_point(model.averageFolders);
-          if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
           step_time = +new Date();
           step_duration = step_time - last_step_time;
-          if (show_visualization.checked) displayStats();
       };
 
       var initial_model_loop_time = 13;
@@ -431,14 +429,12 @@
       var model_loop_time = initial_model_loop_time;
       var model_loop_goal = model_loop_time * model_loop_bump_factor;
 
-      var multiple_steps;
       var average_loop_time = 0, max_loop_time = 0;
 
       function runModelLoop(){
         if (model.indexOfStep < 5000 && running) {
           loop_start = +new Date();
           animmation_loop_timing = loop_start - previous_loop_start;
-          multiple_steps = false;
           modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
           step_duration_max = 0;
           runModelStep();
@@ -446,7 +442,6 @@
           loop_time = +new Date();
           loop_elapsed = loop_time - loop_start;
           while (loop_elapsed < model_loop_time) {
-            multiple_steps = true;
             runModelStepWithoutVisualization();
             if (step_duration > step_duration_max) step_duration_max = step_duration;
             loop_time = +new Date()
