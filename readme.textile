@@ -40,25 +40,21 @@ h2. Benchmarks
 
 h3. Time for modeling and rendering to both the model canvas and the graph rendered into SVG using d3.js.
 
-|_. Mac OS X 10.6.8          |_\3>.       ave rate (steps/s) at 5000 steps |_\3>. duration of step at model step number |
-|_. Browser                  |_. on |_. graph off |_. graph and canvas off |_.        100 |_.       2500 |_.       5000 |
-| WebKit nightly rev97458    |  121 |         160 |                    236 |            4 |            5 |            4 |
-| Safari v5.1 (6534.50)      |  110 |         141 |                    227 |            4 |            5 |            5 |
-| FireFox 7.0.1              |   67 |         166 |                    242 |            6 |           11 |           39 |
-| FireFox Nightly 10.0a1     |   62 |         193 |                    247 |            6 |           15 |           48 |
-| Chrome 16.0.908.0 canary   |   51 |         195 |                    232 |            6 |           16 |           49 |
-| Chrome 14.0.835.186        |   58 |         198 |                    230 |            5 |           16 |           49 |
+|_. Mac OS X 10.6.8            |_\2>. ave rate (steps/s) for 5000 steps |
+|_. Browser                    |_. on          |_. graph and canvas off |
+| Chrome 14.0.835.186          |     1719      |            12920       |
+| Safari v5.1.1 (6534.51.22)   |      554      |             4022       |
+| FireFox 7.0.1                |      229      |             2994       |
 
-|_. Windows 7 in VirtualBox  |_\3>.       ave rate (steps/s) at 5000 steps |
-|_. Browser                  |_. on |_. graph off |_. graph and canvas off |
-| Safari v5.1.1 (7534.51.22) |  162 |         155 |                    226 |
-| Chrome 16.0.907.0 canary   |   77 |         153 |                    199 |
-| Chrome 14.0.835.202        |   93 |         101 |                    199 |
-| FireFox 7.0.1              |   51 |          90 |                    127 |
-| FireFox Nightly 10.0a1     |   55 |          93 |                    112 |
-| IE v9.0.8112.16421         |   59 |          65 |                     64 |
+|_. Windows 7 in VirtualBox    |_\>.  ave rate (steps/s) for 5000 steps |
+|_. Browser                    |_. on          |_. graph and canvas off |
+| Safari v5.1.1 (7534.51.22)   |               |                        |
+| Chrome 14.0.835.202          |               |                        |
+| FireFox 7.0.1                |               |                        |
+| IE v9.0.8112.16421           |               |                        |
 
-_All these tests were run on a MacBook Pro, 2.66 GHz Intel Core i7, Mac OS X 10.6.8 on October 14, 2011._
+|_. NetLogo 5.0RC2             |_\2>.  ave rate (steps/s) for 5000 steps |
+|_.                            |_. on          |_. graph and canvas off |
+| Bureaucrats-fast             |        57     |              1786      |
 
-On the same computer using NetLogo 5.0.rc1 the model averaged 21 samples/s when run for 5000 avalanche model steps.
-
+_All these tests were run on a MacBook Pro, 2.66 GHz Intel Core i7, Mac OS X 10.6.8 on October 21, 2011._
