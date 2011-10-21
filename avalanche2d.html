@@ -272,11 +272,11 @@
       var run_mode;
 
       var start_time  = +new Date();
-      var sample_time = +new Date();
-      var last_sample_time = sample_time;
-      var sample_duration;
+      var step_time = +new Date();
+      var last_step_time = step_time;
+      var step_duration = 0, step_duration_max = 0;
       var step_start, step_duration;
-      var average_sample_rate;
+      var average_step_rate;
       var foldersRunningAverage;
       
       var loop_start, loop_time, loop_elapsed, previous_loop_start, animmation_loop_timing;
@@ -285,10 +285,10 @@
       var graph = grapher.graph(graph_data);
 
       function displayStats() {
-        average_sample_rate = model.indexOfStep / (sample_time - start_time) * 1000
+        average_step_rate = model.indexOfStep / (step_time - start_time) * 1000
         stats.textContent = 'avalanches: ' + model.indexOfStep + 
-          sprintf(", rate: %5.1f (steps/s)", average_sample_rate) +
-          sprintf(", last sample time: %3f (ms)", sample_duration) +
+          sprintf(", rate: %5.1f (steps/s)", average_step_rate) +
+          sprintf(", last sample time: %3f (ms)", step_duration) +
           sprintf(", loop compute maximum: %3f", model_loop_time) +
           sprintf(", anim loop timing: %3f", animmation_loop_timing) +
           sprintf(", folders: %2.3f (ave)", model.averageFolders);
@@ -355,6 +355,8 @@
             graph.show_canvas();
           };
           previous_loop_start = +new Date();
+          initial_model_loop_time = model_loop_time;
+          model_loop_goal = model_loop_time * model_loop_bump_factor;
           modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
         }
       };
@@ -401,31 +403,42 @@
       show_data_table.onchange = displayFolderTable;
       
       function runModelStep() {
-          last_sample_time = +new Date(sample_time);
+          last_step_time = +new Date(step_time);
           model.nextStep();
           graph_data.push(model.averageFolders);
           if (show_visualization.checked) avalanche2d.displayFolderCanvas(canvas, model);
           // if (show_graph.checked) graph.add_point(model.averageFolders);
           if (show_graph.checked) graph.add_canvas_point(model.averageFolders);
           if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
-          sample_time = +new Date();
-          sample_duration = sample_time - last_sample_time;
+          step_time = +new Date();
+          step_duration = step_time - last_step_time;
           if (show_visualization.checked) displayStats();
       };
 
-      var model_loop_time = 13;
-      var model_loop_bump = model_loop_time / 5;
+      var initial_model_loop_time = 13;
+      var model_loop_bump_factor = 1.2;
+
+      var model_loop_time = initial_model_loop_time;
+      var model_loop_goal = model_loop_time * model_loop_bump_factor;
+
+      var multiple_steps;
+      var average_loop_time = 0, max_loop_time = 0;
 
       function runModelLoop(){
         if (model.indexOfStep < 5000 && running) {
           loop_start = +new Date();
           animmation_loop_timing = loop_start - previous_loop_start;
+          multiple_steps = false;
           modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
+          step_duration_max = 0;
           runModelStep();
-          loop_time = +new Date()
+          if (step_duration > step_duration_max) step_duration_max = step_duration;
+          loop_time = +new Date();
           loop_elapsed = loop_time - loop_start;
           while (loop_elapsed < model_loop_time) {
+            multiple_steps = true;
             runModelStep();
+            if (step_duration > step_duration_max) step_duration_max = step_duration;
             loop_time = +new Date()
             loop_elapsed = loop_time - loop_start;
             if (model.indexOfStep >= 5000) {
@@ -433,12 +446,12 @@
               break;
             };
           };
-          if (animmation_loop_timing > (model_loop_time+model_loop_bump)) {
+          if (animmation_loop_timing > model_loop_goal && loop_elapsed < model_loop_goal) {
             model_loop_time++;
           } else {
             model_loop_time--;
           };
-          model_loop_bump = model_loop_time / 5;
+          model_loop_goal = model_loop_time * model_loop_bump_factor;
           previous_loop_start = loop_start;
         } else {
           modelStop()
