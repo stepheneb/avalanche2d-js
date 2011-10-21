@@ -88,7 +88,7 @@
       of Bob Tinker's <a href='http://ccl.northwestern.edu/netlogo/'>NetLogo</a> model 
       <a href = 'nlogo/Bureaucrats.v6.nlogo'>Bureaucrats.v6</a> exploring 
       <a href="http://en.wikipedia.org/wiki/Self-organized_criticality">Self-Organised Criticality</a>.
-    <p>
+    </p>
     <blockquote>
       The mathematics of avalanche size and frequency follows a power law that can be simulated to
       a first approximation by any system that exhibits self-organized criticality (SOC). In "How
@@ -104,6 +104,18 @@
       the office. In principle, just adding one new folder might involve redistribution at every
       desk, sometimes multiple times.
     </blockquote>
+    <p>
+      Seth Tisue, the lead NetLogo developer contributed <a href="nlogo/Bureaucrats-fast.nlogo">
+      Bureaucrats-fast</a> a re-write of <a href='nlogo/Bureaucrats.v6.nlogo'>Bureaucrats.v6</a>
+      that runs about twice as fast. 
+    </p>
+    <p>
+      Testing  Oct 20 2011 in Chrome 14.0.835.186 on a Mac OS X 10.6.8 system with a 
+      2.66 GHz Intel Core i7 show this JavaScript version running about 30x faster than
+      <a href="nlogo/Bureaucrats-fast.nlogo">Bureaucrats-fast</a> running in NetLogo 5.0RC2
+      when displaying the folders and graph and about seven times faster running just the 
+      computational model.
+    <p>
     <div id="warning">
       There is a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=695959">
       Canvas-related bug in FireFox</a> which prevents the display of data in the
