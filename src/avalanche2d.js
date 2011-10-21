@@ -563,20 +563,22 @@ avalanche2d.displayFolderTable = function(destination, model) {
     var rows = model.ny;
     var ycols, ycols_plus_x;
     var folder_count;
-    var tableStr = "    ";
-    for (y = 0; y < rows; y++) tableStr += sprintf("%2.0f ", y);
-    tableStr += '\n';
+    var table_strings = ["    "];
+    for (y = 0; y < rows; y++) {
+      table_strings[table_strings.length] = sprintf("%2.0f ", y);
+    };
+    table_strings[table_strings.length] = '\n';
     for (y = 0; y < rows; y++) {
         ycols = y * rows;
-        tableStr += sprintf("%2.0f: ", y);
+        table_strings[table_strings.length] = sprintf("%2.0f: ", y);
         for (x = 0; x < columns; x++) {
             ycols_plus_x = ycols + x;
             folder_count = model.folder[ycols_plus_x];
-            tableStr += sprintf("%2.0f ", folder_count);
+            table_strings[table_strings.length] = sprintf("%2.0f ", folder_count);
         }
-        tableStr += '\n';
+        table_strings[table_strings.length] = '\n';
     }
-    destination.innerHTML = tableStr;
+    destination.innerHTML = table_strings.join("");
 }
 
 // export namespace
