@@ -321,8 +321,8 @@
         run_mode = "stop";
         running = false;
         if (modelRunRequest) cancelRequestAnimFrame(modelRunRequest);
+        displayStats();
         if (!show_visualization.checked) {
-          displayStats();
           avalanche2d.displayFolderCanvas(canvas, model);
         };
         graph.hide_canvas();
