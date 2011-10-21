@@ -475,8 +475,8 @@
         } else {
           aloop_timings.shift();
           aloop_minimum = Math.min.apply(null, aloop_timings)
-          var str = "Animation loop timing measurements at page startup: ";
-          aloop_output.innerHTML = aloop_timings.join(", ");
+          var str = "Animation loop timing measurements for this browser: ";
+          aloop_output.innerHTML = str + aloop_timings.join(", ");
         }
       };
       
