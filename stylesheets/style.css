@@ -16,6 +16,10 @@ body {
     background-color: #d4e0eb;
 }
 
+.x text {
+  font-size: 0.95em;
+};
+
 pre {
   margin: 10px 5px 10px 5px;
   font-size: 1em;

@@ -123,9 +123,10 @@
       graph while the model is running. Avalanche-JS runs fastest in Chrome.
     </div>
     <p>
-      The simulation area is 100x100 cells. A yellow cell indicates two folders on the desk, 
-      a blue cell is zero, green one, and red three folders. The model will automatically stop
-      after 5000 model steps if you leave it running.
+      The initial array of desks with folders consists of 100x100 cells. A yellow cell 
+      indicates two folders on the desk, a blue cell is zero, green one, and red three 
+      folders. The model will automatically stop after 5000 model steps if you leave it 
+      running.
     </p>
   </div>
   <div id="content">
@@ -154,6 +155,27 @@
         </li>
         <li>
           <fieldset>
+            <legend>Desk Array Size</legend>
+            <select id="select-desk-array-size">
+              <option value="50">50x50</option>
+              <option value="100" selected>100x100</option>
+              <option value="200">200x200</option>
+              <option value="400">400x400</option>
+            </select>
+          </fieldset>
+        </li>
+        <li>
+          <form id="show-me">
+            <fieldset>
+              <legend>Rendering</legend>
+              <label><input id="show-visualization" type="checkbox" checked/> Visualization</label>
+              <label><input id="show-graph" type="checkbox" checked/> Graph</label>
+              <label><input id="show-data-table" type="checkbox"/> Folder-Desk Array</label>
+            </fieldset>
+          </form>
+        </li>
+        <li>
+          <fieldset>
             <legend>JavaScript Array Type</legend>
             <select id="select-array-type">
               <option value="regular">Regular</option>
@@ -168,16 +190,6 @@
               <option value="Float64Array">Float64Array</option>
             </select>
           </fieldset>
-        </li>
-        <li>
-          <form id="show-me">
-            <fieldset>
-              <legend>Rendering</legend>
-              <label><input id="show-visualization" type="checkbox" checked/> Visualization</label>
-              <label><input id="show-graph" type="checkbox" checked/> Graph</label>
-              <label><input id="show-data-table" type="checkbox"/> Folder-Desk Array</label>
-            </fieldset>
-          </form>
         </li>
         <li id="step-model-warning"></li>
       </ul>
@@ -244,8 +256,10 @@
       avalanche2d.setupRGBAColorTables();
       
       var model, array_selection;
-      
-      var model_options = { model: { nx: 100, ny: 100, initial_value: 2 }};
+
+      var folder_size = 100;
+      var max_model_step = folder_size * folder_size / 2;
+      var model_options = { model: { nx: folder_size, ny: folder_size, initial_value: 2 }};
 
       function selectArrayTypeChange() {
         array_selection = select_array_type.value;
@@ -254,6 +268,25 @@
       
       select_array_type.onchange = selectArrayTypeChange;
       select_array_type.onchange();
+
+      var graph_data = [2];
+      var graph = grapher.graph(graph_data, max_model_step);
+
+      var select_desk_array_size = document.getElementById("select-desk-array-size");
+      var select_desk_array_size_choices = select_array_type.getElementsByTagName("option")
+
+      function selectDeskArraySizeChange() {
+        folder_size = +select_desk_array_size.value;
+        max_model_step = folder_size * folder_size / 2;
+        model_options = { model: { nx: folder_size, ny: folder_size, initial_value: 2 }};
+        model = new avalanche2d.Model(model_options, array_selection);
+        graph_data = [2];
+        graph.change_xaxis(max_model_step);
+        modelReset();
+      };
+      
+      select_desk_array_size.onchange = selectDeskArraySizeChange;
+      // select_desk_array_size.onchange();
 
       var visualizations = document.getElementById("visualizations");
       var folder_data = document.getElementById("folder-data");
@@ -282,9 +315,6 @@
       
       var loop_start, loop_time, loop_elapsed, previous_loop_start, animmation_loop_timing;
       
-      var graph_data = [2];
-      var graph = grapher.graph(graph_data);
-
       function displayStats() {
         average_step_rate = model.indexOfStep / (step_time - start_time) * 1000
         stats.textContent = 'avalanches: ' + model.indexOfStep + 
@@ -341,13 +371,13 @@
         };
         graph.hide_canvas();
         graph.new_data(graph_data);
-        if (model.indexOfStep >= 5000) displayResetWarning();
+        if (model.indexOfStep >= max_model_step) displayResetWarning();
         step_model_inputs[0].checked = true;
       };
 
       function modelGo() {
         running = true;
-        if (model.indexOfStep >= 5000) {
+        if (model.indexOfStep >= max_model_step) {
           displayResetWarning();
           step_model_inputs[0].checked = true;
         } else {
@@ -434,7 +464,7 @@
       var average_loop_time = 0, max_loop_time = 0;
 
       function runModelLoop(){
-        if (model.indexOfStep < 5000 && running) {
+        if (model.indexOfStep < max_model_step && running) {
           loop_start = +new Date();
           animmation_loop_timing = loop_start - previous_loop_start;
           modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
@@ -448,7 +478,7 @@
             if (step_duration > step_duration_max) step_duration_max = step_duration;
             loop_time = +new Date()
             loop_elapsed = loop_time - loop_start;
-            if (model.indexOfStep >= 5000) {
+            if (model.indexOfStep >= max_model_step) {
               running = false;
               break;
             };

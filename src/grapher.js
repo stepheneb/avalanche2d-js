@@ -2,14 +2,23 @@
   
   grapher = { version: "0.0.1" };
 
-  grapher.graph = function(data) {
+  grapher.graph = function(data, xaxis_max) {
 
     var array = data;
+    var xaxis_max = xaxis_max;
     graph = {};
 
     graph.new_data = function(points) {
       new_data(points);
       update();
+    };
+
+    graph.change_xaxis = function(xaxis_max) {
+      x = d3.scale.linear()
+          .domain([0, xaxis_max])
+          .range([0, mw]);
+      update();
+      redraw();
     };
 
     graph.add_point = function(p) {
@@ -45,7 +54,7 @@
         stroke = function(d) { return d ? "#ccc" : "#666"; },
         points = indexedData(array, 0),
         x = d3.scale.linear()
-            .domain([0, 5000])
+            .domain([0, xaxis_max])
             .range([0, mw]),
         // drag x-axis logic
         downscalex = x.copy(),
@@ -206,25 +215,25 @@
     function update() {
       var lines = vis.select("path").attr("d", line(points));
  
-      var circle = vis.selectAll("circle")
-          .data(points, function(d) { return d; });
- 
-      circle.enter().append("svg:circle")
-          .attr("class", function(d) { return d === selected ? "selected" : null; })
-          .attr("cx",    function(d) { return x(d.x); })
-          .attr("cy",    function(d) { return y(d.y); })
-          .attr("r", 1.0)
-          .on("mousedown", function(d) {
-            selected = dragged = d;
-            update();
-          });
- 
-      circle
-          .attr("class", function(d) { return d === selected ? "selected" : null; })
-          .attr("cx",    function(d) { return x(d.x); })
-          .attr("cy",    function(d) { return y(d.y); });
- 
-      circle.exit().remove();
+      // var circle = vis.selectAll("circle")
+      //     .data(points, function(d) { return d; });
+      //  
+      // circle.enter().append("svg:circle")
+      //     .attr("class", function(d) { return d === selected ? "selected" : null; })
+      //     .attr("cx",    function(d) { return x(d.x); })
+      //     .attr("cy",    function(d) { return y(d.y); })
+      //     .attr("r", 1.0)
+      //     .on("mousedown", function(d) {
+      //       selected = dragged = d;
+      //       update();
+      //     });
+      //  
+      // circle
+      //     .attr("class", function(d) { return d === selected ? "selected" : null; })
+      //     .attr("cx",    function(d) { return x(d.x); })
+      //     .attr("cy",    function(d) { return y(d.y); });
+      //  
+      // circle.exit().remove();
  
       if (d3.event && d3.event.keyCode) {
         d3.event.preventDefault();
