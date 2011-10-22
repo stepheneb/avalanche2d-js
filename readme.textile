@@ -56,6 +56,8 @@ h3. Time for modeling and rendering to both the model canvas and the real-time g
 |                              |                     |                        |
 |_. Tablets and SmartPhones    |_\2>.                                         |
 | iPad2, iOS 4.3.1             |=.       130         |=.            263       |
+| iPhone 4S, iOS 4.3.1         |=.       203         |=.                      |
+| Samsung Galaxy tablet        |=.       243         |=.                      |
 
 fn1. _Data collected October 21, 2011_
 
