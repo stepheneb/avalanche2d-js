@@ -270,7 +270,15 @@
       select_array_type.onchange();
 
       var graph_data = [2];
-      var graph = grapher.graph(graph_data, max_model_step);
+
+      var graph = grapher.graph({
+        "title": null,
+        "xlabel": "Model Step Count",
+        "xmin": 0, "xmax": 5000,
+        "ylabel": null,
+        "ymin": 2.0, "ymax": 2.2,
+        "dataset": graph_data
+      });
 
       var select_desk_array_size = document.getElementById("select-desk-array-size");
       var select_desk_array_size_choices = select_array_type.getElementsByTagName("option")

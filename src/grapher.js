@@ -2,20 +2,38 @@
   
   grapher = { version: "0.0.1" };
 
-  grapher.graph = function(data, xaxis_max) {
+  // options = {
+  //   "title": "Average Number of folders on a desk",
+  //   "xlabel": "Model Step Count",
+  //   "xmin": 0, "xmax": 5000,
+  //   "ylabel": null
+  //   "ymin": 2.0, "ymax": 2.2,
+  //   "dataset": graph_data
+  // }
+  grapher.graph = function(options) {
 
-    var array = data;
-    var xaxis_max = xaxis_max;
     graph = {};
+
+    graph.dataset = options.dataset || [0];
+
+    graph.xmax    = options.xmax    || 10;
+    graph.xmin    = options.xmin    || 0;
+
+    graph.ymax    = options.ymax    || 10;
+    graph.ymin    = options.ymin    || 0;
+
+    graph.title   = options.title;
+    graph.xlabel  = options.xlabel;
+    graph.ylabel  = options.ylabel;
 
     graph.new_data = function(points) {
       new_data(points);
       update();
     };
 
-    graph.change_xaxis = function(xaxis_max) {
+    graph.change_xaxis = function(xmax) {
       x = d3.scale.linear()
-          .domain([0, xaxis_max])
+          .domain([0, xmax])
           .range([0, mw]);
       update();
       redraw();
@@ -45,47 +63,57 @@
       clear_canvas();
     };
 
-    var size = [500, 350],
-        padding = [20, 30, 20, 40], // top right bottom left
-        mw = size[0] - padding[1] - padding[3],
-        mh = size[1] - padding[0] - padding[2],
-        tx = function(d) { return "translate(" + x(d) + ",0)"; },
-        ty = function(d) { return "translate(0," + y(d) + ")"; },
-        stroke = function(d) { return d ? "#ccc" : "#666"; },
-        points = indexedData(array, 0),
-        x = d3.scale.linear()
-            .domain([0, xaxis_max])
-            .range([0, mw]),
-        // drag x-axis logic
-        downscalex = x.copy(),
-        downx = Math.NaN,
-        // y-scale (inverted domain)
-        y = d3.scale.linear()
-            .domain([2.2, 2.0])
-            .range([0, mh]),
-        line = d3.svg.line()
-            .x(function(d, i) { return x(points[i].x); })
-            .y(function(d, i) { return y(points[i].y); }),
-        // drag x-axis logic
-        downscaley = y.copy(),
-        downy = Math.NaN,
-        dragged = null,
-        selected = points[0];
-    
     var plot, gcanvas, gctx;
     
-    var chart = document.getElementById("chart");
+    var chart = document.getElementById("chart"),
+      cx = chart.clientWidth,
+      cy = chart.clientHeight,
+      padding = {
+         "top":    graph.title  ? 30 : 20, 
+         "right":                 30, 
+         "bottom": graph.xlabel ? 40 : 10, 
+         "left":   graph.ylabel ? 70 : 45
+      },
+      size = { 
+        "width":  cx - padding.left - padding.right, 
+        "height": cy - padding.top  - padding.bottom 
+      },
+      mw = size.width,
+      mh = size.height,
+      tx = function(d) { return "translate(" + x(d) + ",0)"; },
+      ty = function(d) { return "translate(0," + y(d) + ")"; },
+      stroke = function(d) { return d ? "#ccc" : "#666"; },
+      points = indexedData(graph.dataset, 0);
+      
+      var x = d3.scale.linear()
+          .domain([graph.xmin, graph.xmax])
+          .range([0, mw]),
+      // drag x-axis logic
+      downscalex = x.copy(),
+      downx = Math.NaN;
+      // y-scale (inverted domain)
+      var y = d3.scale.linear()
+          .domain([graph.ymax, graph.ymin])
+          .range([0, mh]),
+      line = d3.svg.line()
+          .x(function(d, i) { return x(points[i].x); })
+          .y(function(d, i) { return y(points[i].y); }),
+      // drag x-axis logic
+      downscaley = y.copy(),
+      downy = Math.NaN,
+      dragged = null,
+      selected = points[0];
  
     var vis = d3.select("#chart").append("svg:svg")
-        .attr("width", size[0] + padding[3] + padding[1])
-        .attr("height", size[1] + padding[0] + padding[2])
+        .attr("width", cx)
+        .attr("height", cy)
         // .style("background-fill", "#FFEEB6")
         .append("svg:g")
-          .attr("transform", "translate(" + padding[3] + "," + padding[0] + ")");
+          .attr("transform", "translate(" + padding.left + "," + padding.top + ")");
  
     var plot = vis.append("svg:rect")
-        .attr("width", size[0])
-        .attr("height", size[1])
+        .attr("width", size.width)
+        .attr("height", size.height)
         // .attr("stroke", "none")
         .style("fill", "#EEEEEE")
         .attr("pointer-events", "all")
@@ -99,6 +127,35 @@
           }
         });
  
+    // add Chart Title
+    if (graph.title) {
+      vis.append("svg:text")
+          .text("Average Number of folders on a desk")
+          .attr("x", size.width/2)
+          .attr("dy","-1em")
+          .style("text-anchor","middle")
+    };
+
+    // Add the x-axis label
+    if (graph.xlabel) {
+      vis.append("svg:text")
+          .text("Model Step Count")
+          .attr("x", size.width/2)
+          .attr("y", size.height)
+          .attr("dy","2.4em")
+          .style("text-anchor","middle")
+    };
+
+    // add y-axis label
+    if (graph.ylabel) {
+      vis.append("svg:g")
+          .append("svg:text")
+              .text("Average Number of folders on a desk")
+              .style("text-anchor","middle")
+              .attr("transform","translate(" + -50 + " " + size.height/2+") rotate(-90)")
+    };
+
+    //
     vis.append("svg:path")
         .attr("class", "line")
         .attr("d", line(points));
@@ -244,8 +301,8 @@
     function mousemove() {
       if (!dragged) return;
       var m = d3.svg.mouse(vis.node());
-      dragged.x = x.invert(Math.max(0, Math.min(size[0], m[0])));
-      dragged.y = y.invert(Math.max(0, Math.min(size[1], m[1])));
+      dragged.x = x.invert(Math.max(0, Math.min(size.width, m[0])));
+      dragged.y = y.invert(Math.max(0, Math.min(size.height, m[1])));
       update();
     }
  
@@ -292,10 +349,10 @@
       gxe.append("svg:line")
           .attr("stroke", stroke)
           .attr("y1", 0)
-          .attr("y2", size[1]);
+          .attr("y2", size.height);
  
       gxe.append("svg:text")
-          .attr("y", size[1])
+          .attr("y", size.height)
           .attr("dy", "1em")
           .attr("text-anchor", "middle")
           .text(fx)
@@ -327,7 +384,7 @@
       gye.append("svg:line")
           .attr("stroke", stroke)
           .attr("x1", 0)
-          .attr("x2", size[0]);
+          .attr("x2", size.width);
  
       gye.append("svg:text")
           .attr("x", -3)
@@ -344,23 +401,23 @@
           });
  
       gy.exit().remove();
+
       update();
     }
     
-    function indexedData(array, initial_index) {
+    function indexedData(dataset, initial_index) {
       var i = 0,
           start_index = initial_index || 0,
-          n = array.length,
+          n = dataset.length,
           points = [];
       for (i = 0; i < n;  i++) {
-        points.push( { x: i+start_index, y: array[i] } )
+        points.push( { x: i+start_index, y: dataset[i] } )
       };
       return points;
     };
  
     // attach the mousemove and mouseup to the body
     // in case one wonders off the axis line
- 
     d3.select('body')
       .on("mousemove", function(d) {
         var p = d3.svg.mouse(vis[0][0]);
