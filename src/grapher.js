@@ -271,7 +271,20 @@
 
     function update() {
       var lines = vis.select("path").attr("d", line(points));
- 
+
+      // update real-time canvas line graph
+      gctx.fillRect(0, 0, gcanvas.width, gcanvas.height);
+      gctx.beginPath();
+      oldx = x.call(self, 0, 0);
+      oldy = y.call(self, points[0].y, 0);
+      gctx.moveTo(oldx, oldy);
+      for (i=0; i < points.length; i++) {
+        newx = x.call(self, i, i);
+        newy = y.call(self, points[i], i);
+        gctx.lineTo(newx, newy);
+      }
+      gctx.closePath();
+
       // var circle = vis.selectAll("circle")
       //     .data(points, function(d) { return d; });
       //  
