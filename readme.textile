@@ -51,7 +51,7 @@ h2. Benchmarks
 
 h3. Time for modeling and rendering to both the model canvas and the real-time graph rendering using a Canvas overlay over the D3.js SVG graph. [1]
 
-|_. Mac OS X 10.6.8 [1], [2]          |_\2>. ave rate (model-steps/s) for 5000 steps |
+|_. Mac OS X 10.6.8 [1]&nbsp;[2]      |_\2>. ave rate (model-steps/s) for 5000 steps |
 |_. Browser                           |_=.                  |_=.  graph/canvas off   |
 | Chrome 14.0.835.186                 |=.      9578         |=.          12594       |
 | Safari v5.1.1 (6534.51.22)          |=.      3576         |=.           4840       |
