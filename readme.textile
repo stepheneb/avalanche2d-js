@@ -53,15 +53,15 @@ h3. Time for modeling and rendering to both the model canvas and the real-time g
 
 |_. Mac OS X 10.6.8 [2]               |_\2>. ave rate (model-steps/s) for 5000 steps |
 |_. Browser                           |_=.                  |_=.  graph/canvas off   |
-| Chrome 14.0.835.186                 |=.      8695         |=.          11160       |
+| Chrome 14.0.835.186                 |=.      9578         |=.          12594       |
 | Safari v5.1.1 (6534.51.22)          |=.      3713         |=.           4703       |
-| FireFox 7.0.1 [3]                   |=.       385         |=.           3251       |
+| FireFox 7.0.1 [3]                   |=.      2291         |=.           3191       |
 |                                     |                     |                        |
 |_. Windows 7 in VirtualBox           |_\2>.                                         |
-| Chrome 14.0.835.202                 |=.      6173         |=.          12987       |
-| IE v9.0.8112.16421 [3]              |=.      1172         |=.           4873       |
-| FireFox 7.0.1 [3]                   |=.       628         |=.           3626       |
-| Safari v5.1.1 (7534.51.22)          |=.       499         |=.            709       |
+| Chrome 14.0.835.202                 |=.      5165         |=.          10661       |
+| IE v9.0.8112.16421 [3]              |=.      3941         |=.           5682       |
+| FireFox 7.0.1 [3]                   |=.      2484         |=.           3934       |
+| Safari v5.1.1 (7534.51.22)          |=.       507         |=.            815       |
 |                                     |                     |                        |
 |_. NetLogo 5.0RC2                    |_\2>.                                         |
 | Bureaucrats-fast                    |=.       448         |=.           1172       |
