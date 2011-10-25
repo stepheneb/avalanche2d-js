@@ -231,7 +231,9 @@
 
     function clear_canvas() {
       gctx.fillStyle = "rgba(0,255,0, 0.05)";
+      gctx.globalCompositeOperation = "destination-atop";
       gctx.fillRect(0, 0, gcanvas.width, gcanvas.height);
+      gctx.globalCompositeOperation = "source-over";
     };
     
     function show_canvas() {
