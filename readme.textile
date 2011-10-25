@@ -28,12 +28,24 @@ Seth Tisue, the lead NetLogo developer contributed "Bureaucrats-fast":http://ste
 
 Testing on Oct 20 2011 show this JavaScript adaptation runs about 20 times faster on Chrome than "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo when displaying folders and graph and about 11 times faster running just the computational model. See **Benchmarks** section below.
 
-h2. References
+h2. Self-Organised Criticality References
 
 # "Review of: How Nature Works: The Science of Self-Organised Criticality, Per Bak, New York, NY: Copernicus Press 1996":http://jasss.soc.surrey.ac.uk/4/4/reviews/bak.html
 # "Self organized criticality in earth systems By Stefan Hergarten, page 94":http://books.google.com/books?id=eBZbupdVnYAC&pg=PA94&lpg=PA94&dq=Grassberger++bureaucrat&source=bl&ots=XR7W1E61Wa&sig=06HmPg4d9YyBUz63RIphjUza1ik&hl=en&ei=MxGVTvThPIjk0QG4npnGBw&sa=X&oi=book_result&ct=result&resnum=1&ved=0CBoQ6AEwAA#v=onepage&q=Grassberger%20%20bureaucrat&f=false
 # "On the avalanche size distribution in the BTW model":http://www.cmth.ph.ic.ac.uk/people/k.christensen/papers/preprints/preprint_btw.pdf
 # "Wikipedia: Self-Organised Criticality":http://en.wikipedia.org/wiki/Self-organized_criticality
+
+h2. Programming References
+
+# "Efficient Script Yielding":http://dvcs.w3.org/hg/webperf/raw-file/tip/specs/setImmediate/Overview.html
+# "setImmediate":https://github.com/NobleJS/setImmediate
+# "W3C: Timing control for script-based animations":http://www.w3.org/TR/animation-timing/
+# "W3C: Real-Time Web Communications Working Group":http://www.w3.org/2011/04/webrtc/wiki/Main_Page
+# "Web Real-Time Communication Use-cases and Requirements":http://tools.ietf.org/html/draft-ietf-rtcweb-use-cases-and-requirements-06
+# "W3C: Audio Working Group":http://www.w3.org/2011/audio/charter/"
+# "Beyond HTML5 Audio Capture in Web Browsers":https://labs.ericsson.com/developer-community/blog/beyond-html5-audio-capture-web-browsers
+# "W3C: Web Audio API":https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html
+# "Web Audio Examples":http://chromium.googlecode.com/svn/trunk/samples/audio/index.html
 
 h2. Benchmarks
 
