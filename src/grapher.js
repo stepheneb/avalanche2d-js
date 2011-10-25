@@ -260,7 +260,7 @@
       gcanvas.style.left = plot.left + 'px'
       gcanvas.style.top = plot.top + 'px'
       gctx = gcanvas.getContext( '2d' );
-      gctx.globalCompositeOperation = "destination-atop";
+      gctx.globalCompositeOperation = "source-over";
       gctx.lineWidth = 1;
       gctx.fillStyle = "rgba(0,255,0, 0.05)";
       gctx.fillRect(0, 0, gcanvas.width, gcanvas.height);
