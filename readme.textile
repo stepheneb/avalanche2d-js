@@ -51,25 +51,25 @@ h2. Benchmarks
 
 h3. Time for modeling and rendering to both the model canvas and the real-time graph rendering using a Canvas overlay over the D3.js SVG graph. [1]
 
-|_. Mac OS X 10.6.8 [1]&nbsp;[2]      |_\2>. ave rate (model-steps/s) for 5000 steps |
-|_. Browser                           |_=.                  |_=.  graph/canvas off   |
-| Chrome 14.0.835.186                 |=.      9578         |=.          12594       |
-| Safari v5.1.1 (6534.51.22)          |=.      3576         |=.           4840       |
-| FireFox 7.0.1                       |=.      2291         |=.           3191       |
-|                                     |                     |                        |
-|_. Windows 7 in VirtualBox [1], [2]  |_\2>.                                         |
-| Chrome 14.0.835.202                 |=.      5165         |=.          10661       |
-| IE v9.0.8112.16421                  |=.      3941         |=.           5682       |
-| FireFox 7.0.1                       |=.      2484         |=.           3934       |
-| Safari v5.1.1 (7534.51.22)          |=.       630         |=.           1089       |
-|                                     |                     |                        |
-|_. NetLogo 5.0RC2 [3], [2]            |_\2>.                                         |
-| Bureaucrats-fast                    |=.       448         |=.           1172       |
-|                                     |                     |                        |
-|_. Tablets and SmartPhones [3]       |_\2>.                                         |
-| iPad2, iOS 4.3.1                    |=.       130         |=.            263       |
-| iPhone 4S, iOS 5.0                  |=.       203         |=.                      |
-| Samsung Galaxy tablet, Android 3.1  |=.       243         |=.            660       |
+|_. Mac OS X 10.6.8 [1]&nbsp;[2]          |_\2>. ave rate (model-steps/s) for 5000 steps |
+|_. Browser                               |_=.                  |_=.  graph/canvas off   |
+| Chrome 14.0.835.186                     |=.      9578         |=.          12594       |
+| Safari v5.1.1 (6534.51.22)              |=.      3576         |=.           4840       |
+| FireFox 7.0.1                           |=.      2291         |=.           3191       |
+|                                         |                     |                        |
+|_. Windows 7 in VirtualBox [1]&nbsp;[2]  |_\2>.                                         |
+| Chrome 14.0.835.202                     |=.      5165         |=.          10661       |
+| IE v9.0.8112.16421                      |=.      3941         |=.           5682       |
+| FireFox 7.0.1                           |=.      2484         |=.           3934       |
+| Safari v5.1.1 (7534.51.22)              |=.       630         |=.           1089       |
+|                                         |                     |                        |
+|_. NetLogo 5.0RC2 [3]&nbsp;[2]           |_\2>.                                         |
+| Bureaucrats-fast                        |=.       448         |=.           1172       |
+|                                         |                     |                        |
+|_. Tablets and SmartPhones [3]           |_\2>.                                         |
+| iPad2, iOS 4.3.1                        |=.       130         |=.            263       |
+| iPhone 4S, iOS 5.0                      |=.       203         |=.                      |
+| Samsung Galaxy tablet, Android 3.1      |=.       243         |=.            660       |
 
 fn1. _Data collected October 25, 2011_
 
