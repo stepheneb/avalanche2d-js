@@ -63,4 +63,4 @@ fn1. _Data collected October 21, 2011_
 
 fn2. _MacBook Pro, 2.66 GHz Intel Core i7, Mac OS X 10.6.8_
 
-fn3. _There is a "Canvas-related bug in FireFox":https://bugzilla.mozilla.org/show_bug.cgi?id=695959 which prevents the display of data in the graph while the model is running. This issue is also present in IE9._
+fn3. _There is a "Canvas-related bug in FireFox":https://bugzilla.mozilla.org/show_bug.cgi?id=695959 and "IE9":http://social.msdn.microsoft.com/Forums/en-US/iewebdevelopment/thread/9c1e01fb-2592-4f6f-a623-edcfb655e8e5">IE9 which prevents the display of data in the graph while the model is running._
