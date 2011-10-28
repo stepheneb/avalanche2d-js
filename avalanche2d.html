@@ -316,7 +316,7 @@
       var average_step_rate;
       var foldersRunningAverage;
       
-      var loop_start, loop_time, loop_elapsed, previous_loop_start, animmation_loop_timing;
+      var loop_start, loop_time, loop_elapsed, previous_loop_start, animation_loop_timing;
       
       function displayStats() {
         average_step_rate = model.indexOfStep / (step_time - start_time) * 1000
@@ -324,7 +324,7 @@
           sprintf(", rate: %5.1f (steps/s)", average_step_rate) +
           sprintf(", last sample time: %3f (ms)", step_duration) +
           sprintf(", loop compute maximum: %3f", model_loop_time) +
-          sprintf(", anim loop timing: %3f", animmation_loop_timing) +
+          sprintf(", anim loop timing: %3f", animation_loop_timing) +
           sprintf(", folders: %2.3f (ave)", model.averageFolders);
       };
       
@@ -391,7 +391,7 @@
           previous_loop_start = +new Date();
           initial_model_loop_time = model_loop_time;
           model_loop_goal = model_loop_time * model_loop_bump_factor;
-          animmation_loop_timing = aloop_minimum;
+          animation_loop_timing = aloop_minimum;
           if (show_visualization.checked || show_graph.checked || show_data_table.checked) {
             modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
           } else {
@@ -479,7 +479,7 @@
       function runModelLoop(){
         if (model.indexOfStep < max_model_step && running) {
           loop_start = +new Date();
-          animmation_loop_timing = loop_start - previous_loop_start;
+          animation_loop_timing = loop_start - previous_loop_start;
           modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
           step_duration_max = 0;
           runModelStep();
@@ -496,7 +496,7 @@
               break;
             };
           };
-          if (animmation_loop_timing > model_loop_goal && loop_elapsed < model_loop_goal) {
+          if (animation_loop_timing > model_loop_goal && loop_elapsed < model_loop_goal) {
             model_loop_time++;
           } else {
             if (model_loop_goal > aloop_minimum) model_loop_time--;
@@ -515,10 +515,10 @@
       var aloop_minimum = 16;
       var aloop_output = document.getElementById("aloop-output");
       
-      function measureAnimmationLoop() {
+      function measureAnimationLoop() {
         if (aloop <= aloop_max_count) {
           loop_time = +new Date();
-          requestAnimFrame(measureAnimmationLoop, visualizations);
+          requestAnimFrame(measureAnimationLoop, visualizations);
           aloop_timings[aloop] = loop_time - loop_start;
           aloop++;
           loop_start = loop_time;
@@ -530,13 +530,13 @@
         }
       };
       
-      function startAnimmationLoopMeasurement() {
+      function startAnimationLoopMeasurement() {
         aloop = 0;
         aloop_timings = [];
         loop_start = +new Date();
-        requestAnimFrame(measureAnimmationLoop, visualizations);
+        requestAnimFrame(measureAnimationLoop, visualizations);
       };
-      startAnimmationLoopMeasurement();
+      startAnimationLoopMeasurement();
     });
   };
 </script>
