@@ -107,7 +107,7 @@
     <p>
       Seth Tisue, the lead NetLogo developer contributed <a href="nlogo/Bureaucrats-fast.nlogo">
       Bureaucrats-fast</a> a simplified re-write of <a href='nlogo/Bureaucrats.v6.nlogo'>Bureaucrats.v6</a>
-      that runs about 20 times as fast as the original. Bureaucrats-fast is more appropriate to use when 
+      that runs about 15 times as fast as the original. Bureaucrats-fast is more appropriate to use when 
       comparing performance with this JavaScript adaptation.
     </p>
     <p>
@@ -145,6 +145,15 @@
               <label><input type="radio" name="step" value="step"> Step</input></label>
               <label><input type="radio" name="step" value="go"> Go</input></label>
               <label><input type="radio" name="step" value="reset"> Reset</input></label>
+            </fieldset>
+          </form>
+        </li>
+        <li>
+          <form>
+            <fieldset>
+              <legend>Maximum Steps</legend>
+                <input type="text" id="max-model-step" value="5000"/>
+              </legend>
             </fieldset>
           </form>
         </li>
@@ -256,6 +265,14 @@
       var max_model_step = folder_size * folder_size / 2;
       var model_options = { model: { nx: folder_size, ny: folder_size, initial_value: 2 }};
 
+      var select_max_model_step = document.getElementById("max-model-step");
+
+      function maxModelStepChange() {
+        max_model_step = +select_max_model_step.value;
+      };
+
+      select_max_model_step.onblur = maxModelStepChange;
+
       function selectArrayTypeChange() {
         array_selection = select_array_type.value;
         model = new avalanche2d.Model(model_options, array_selection);
@@ -281,6 +298,7 @@
       function selectDeskArraySizeChange() {
         folder_size = +select_desk_array_size.value;
         max_model_step = folder_size * folder_size / 2;
+        select_max_model_step.value = max_model_step;
         model_options = { model: { nx: folder_size, ny: folder_size, initial_value: 2 }};
         model = new avalanche2d.Model(model_options, array_selection);
         graph_data = [2];
@@ -379,6 +397,7 @@
       };
 
       function modelGo() {
+        max_model_step = +select_max_model_step.value;
         running = true;
         if (model.indexOfStep >= max_model_step) {
           displayResetWarning();

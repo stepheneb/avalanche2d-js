@@ -26,7 +26,7 @@ While it would take a good deal more work to make a whole authoring environment 
 
 Seth Tisue, the lead NetLogo developer contributed "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo a simplified re-write of "Bureaucrats.v6":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo that runs about 20 times as fast as the original. "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo is more appropriate to use when comparing performance of a NetLogo model with this JavaScript adaptation.
 
-Testing on Oct 20 2011 show this JavaScript adaptation runs about 20 times faster on Chrome than "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo when displaying folders and graph and about 11 times faster running just the computational model. See **Benchmarks** section below.
+Testing on Oct 20 and 28 2011 show this JavaScript adaptation runs about 15 times faster on Chrome than "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo when displaying folders and graph and about 8 times faster running just the computational model. See **Benchmarks** section below.
 
 h2. Self-Organised Criticality References
 
@@ -64,7 +64,7 @@ h3. Time for modeling and rendering to both the model canvas and the real-time g
 | Safari v5.1.1 (7534.51.22)              |=.       630         |=.           1089       |
 |                                         |                     |                        |
 |_. NetLogo 5.0RC2 [3]&nbsp;[2]           |_\2>.                                         |
-| Bureaucrats-fast                        |=.       448         |=.           1172       |
+| Bureaucrats-fast                        |=.       644         |=.           1568       |
 |                                         |                     |                        |
 |_. Tablets and SmartPhones [3]           |_\2>.                                         |
 | iPad2, iOS 4.3.1                        |=.       130         |=.            263       |
