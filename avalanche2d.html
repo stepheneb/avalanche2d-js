@@ -392,7 +392,17 @@
           initial_model_loop_time = model_loop_time;
           model_loop_goal = model_loop_time * model_loop_bump_factor;
           animmation_loop_timing = aloop_minimum;
-          modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
+          if (show_visualization.checked || show_graph.checked || show_data_table.checked) {
+            modelRunRequest = requestAnimFrame(runModelLoop, visualizations);
+          } else {
+            while (model.indexOfStep < max_model_step) {
+              model.nextStep();
+              graph_data.push(model.averageFolders);
+            };
+            step_time = +new Date();
+            modelStop();
+          }
+          avalanche2d.displayFolderTable(folder_data, model);
         }
       };
       
