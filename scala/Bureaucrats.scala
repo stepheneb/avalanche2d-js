@@ -39,7 +39,7 @@ class Bureaucrats {
       val overloaded = active.filter(coords => N(coords._1)(coords._2) > 3)
       for((x, y) <- overloaded) {
         N(x)(y) -= 4
-        total += 4
+        total -= 4
         def offLoadToNeighbor(dx: Int, dy: Int) = {
           val x2 = x + dx
           val y2 = y + dy
