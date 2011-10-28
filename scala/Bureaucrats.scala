@@ -1,5 +1,6 @@
 object Bureaucrats {
   val limit = 5000
+  var plot = collection.mutable.Buffer[Int]()
   // result in seconds
   def time(fn: => Unit): Double = {
     val start = System.nanoTime
@@ -8,15 +9,19 @@ object Bureaucrats {
   }
   def benchmark() {
     val a = new Bureaucrats
-    var ticks = 0
-    while(ticks < limit) {
+    while(plot.size < limit) {
       a.go()
-      ticks += 1
+      plot :+= a.total
     }
   }
   def main(args: Array[String]) {
-    while(true)
+    while(true) {
+      plot.clear()
       println(5000 / time(benchmark()) + " steps/second")
+      for((x, ticks) <- plot.zipWithIndex)
+        if(ticks % 250 == 0)
+          println(Seq.fill((x - 20000) / 20)('*').mkString)
+    }
   }
 }
 
