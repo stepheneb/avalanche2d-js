@@ -22,7 +22,6 @@ object Bureaucrats {
 
 class Bureaucrats {
   val dim = 100
-  val neighbors4 = List((1, 0), (-1, 0), (0, 1), (0, -1))
   val N = Array.fill(dim)(Array.fill(dim)(2))
   def rand = util.Random.nextInt(dim)
   var total = 2 * dim * dim
@@ -36,7 +35,7 @@ class Bureaucrats {
       for((x, y) <- overloaded) {
         N(x)(y) -= 4
         total += 4
-        for((dx, dy) <- neighbors4) {
+        def offLoadToNeighbor(dx: Int, dy: Int) = {
           val x2 = x + dx
           val y2 = y + dy
           if(x2 >= 0 && x2 < dim && y2 >= 0 && y2 < dim) {
@@ -45,6 +44,10 @@ class Bureaucrats {
             nextActive += ((x2, y2))
           }
         }
+        offLoadToNeighbor(1, 0)
+        offLoadToNeighbor(-1, 0)
+        offLoadToNeighbor(0, 1)
+        offLoadToNeighbor(0, -1)
       }
       active = nextActive.toList.distinct
     }
