@@ -3,6 +3,15 @@
 //     created by Stephen Bannasch
 //     avalanche2d.js may be freely distributed under the LGPL license.
 
+/*global 
+  window, document navigator
+  requestAnimFrame cancelRequestAnimFrame myRequire
+  avalanche2d grapher sprintf
+  Float64Array Float32Array
+  Int32Array Int16Array Int8Array
+  Uint32Array Uint16Array Uint8Array
+*/
+
 (function() {
 
 var avalanche2d = {};
@@ -22,16 +31,16 @@ avalanche2d.Model = function(canvas, options, array_type) {
 
     this.canvas = canvas;
 
-    if (!array_type) array_type = "regular";
+    if (!array_type) { array_type = "regular"; }
     avalanche2d.array_type = array_type;
 
-    if (!options || options === {}) {
+    if (!options || (options === {})) {
         this.options = avalanche2d.config;
     } else {
         this.options = options;
     }
 
-    if (!this.options.model) this.options.model = {};
+    if (!this.options.model) { this.options.model = {}; }
 
     this.nx = options.model.nx;
     this.ny = options.model.ny;
@@ -48,7 +57,7 @@ avalanche2d.Model.prototype.random_cell = function() {
 avalanche2d.Model.prototype.reset = function() {
     this.indexOfStep = 0;
 
-    this.folder = createArray(this.ARRAY_SIZE, this.options.model.initial_value)
+    this.folder = createArray(this.ARRAY_SIZE, this.options.model.initial_value);
 
     this.averageFolders = this.options.model.initial_value;
     
@@ -68,7 +77,7 @@ avalanche2d.Model.prototype.nextStep = function() {
 //
 
 avalanche2d.Model.prototype.setupCanvas = function() {
-    if (red_color_table.length == 0) setupRGBAColorTables();
+    if (red_color_table.length === 0) { setupRGBAColorTables(); }
     if (this.canvas) {
       this.ctx = this.canvas.getContext('2d');
       this.ctx.fillStyle = "rgb(0,0,0)";
@@ -107,41 +116,41 @@ avalanche2d.Model.prototype.putCanvas = function() {
 };
 
 avalanche2d.Model.prototype.renderFolderCanvas = function() {
-    var folder_count, pix_index, ycols;
+    var folder_count, pix_index, ycols, x, y;
     var folder = this.folder;
     var nx = this.nx;
     var ny = this.ny;
     var pixel_data = this.pd;
     var folder_hue_map = this.folder_hue_map;
-    for (var y = 0; y < ny; y++) {
+    for (y = 0; y < ny; y++) {
         ycols = y * ny;
         pix_index = ycols * 4;
-        for (var x = 0; x < nx; x++) {
+        for (x = 0; x < nx; x++) {
             folder_count = folder[ycols + x];
-            hue =  (folder_count > 4) ? 0 : folder_hue_map[folder_count]
+            hue =  (folder_count > 4) ? 0 : folder_hue_map[folder_count];
             pixel_data[pix_index]   = red_color_table[hue];
             pixel_data[pix_index+1] = blue_color_table[hue];
             pixel_data[pix_index+2] = green_color_table[hue];
             pixel_data[pix_index+3] = 255;
             pix_index += 4;
         }
-    };
+    }
     this.putCanvas();
 };
 
 avalanche2d.Model.prototype.initialiseAlphaPixels = function() {
-    var alpha_index;
+    var alpha_index, x, y, ycols;
     var nx = this.nx;
     var ny = this.ny;
     var pixel_data = this.pd;
-    for (var y = 0; y < ny; y++) {
+    for (y = 0; y < ny; y++) {
         ycols = y * ny;
         alpha_index = ycols * 4 + 3;
-        for (var x = 0; x < nx; x++) {
+        for (x = 0; x < nx; x++) {
             pixel_data[alpha_index] = 255;
             alpha_index += 4;
         }
-    };
+    }
 };
 
 //
@@ -149,15 +158,15 @@ avalanche2d.Model.prototype.initialiseAlphaPixels = function() {
 //
 
 avalanche2d.Model.prototype.renderFolderTable = function(destination) {
+    var folder_count, x, y;
     var columns = this.nx;
     var rows = this.ny;
     var ycols, ycols_plus_x;
-    var folder_count;
     var folder = this.folder;
     var table_strings = ["    "];
     for (y = 0; y < rows; y++) {
       table_strings[table_strings.length] = sprintf("%2.0f ", y);
-    };
+    }
     table_strings[table_strings.length] = '\n';
     for (y = 0; y < rows; y++) {
         ycols = y * rows;
@@ -170,7 +179,7 @@ avalanche2d.Model.prototype.renderFolderTable = function(destination) {
         table_strings[table_strings.length] = '\n';
     }
     destination.innerHTML = table_strings.join("");
-}
+};
 
 // *******************************************************
 //
@@ -180,7 +189,7 @@ avalanche2d.Model.prototype.renderFolderTable = function(destination) {
 
 avalanche2d.FolderSolver2D = function(model) {
 
-    this.model = model
+    this.model = model;
 
     this.nx = model.nx;
     this.ny = model.ny;
@@ -192,7 +201,7 @@ avalanche2d.FolderSolver2D = function(model) {
 
 avalanche2d.FolderSolver2D.prototype.solve = function() {
     if (this.drop()) {
-        this.step()
+        this.step();
     }
     this.model.averageFolders = getAverage(this.model.folder);
 };
@@ -239,8 +248,8 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
         if (folder[index_minus_x] > 3) {
             this.new_cells_to_process.push([xpos-1, ypos, index_minus_x]);
             caused_avalanche = true;
-        };
-    };
+        }
+    }
     
     // if we're not on the right edge increment the neighbor to the right
     if (xpos < nx_minus_one) {
@@ -249,8 +258,8 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
         if (folder[index_plus_x] > 3) {
             this.new_cells_to_process.push([xpos+1, ypos, index_plus_x]);
             caused_avalanche = true;
-        };
-    };
+        }
+    }
     
     // if there is a row above increment the neighbor above
     if (index >= nx)  {
@@ -259,8 +268,8 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
         if (folder[index_minus_y] > 3) {
             this.new_cells_to_process.push([xpos, ypos-1, index_minus_y]);
             caused_avalanche = true;
-        };
-     };
+        }
+     }
 
     // if there is a row below increment the neighbor below
     index_plus_y = index + nx;
@@ -269,8 +278,8 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
         if (folder[index_plus_y] > 3) {
             this.new_cells_to_process.push([xpos, ypos+1, index_plus_y]);
             caused_avalanche = true;
-        };
-    };
+        }
+    }
     return caused_avalanche;
 };
 
@@ -289,19 +298,21 @@ avalanche2d.FolderSolver2D.prototype.distributeFoldersRandomOrder = function(xpo
     
     var caused_avalanche = false;
     
+    var cell;
+    
     // if we're not on the left edge queue the neighbor to the left
-    if (xpos > 0) neighbors.push([xpos-1, ypos, index-1]);
+    if (xpos > 0) { neighbors.push([xpos-1, ypos, index-1]); }
 
     // if we're not on the right edge queue the neighbor to the right
-    if (xpos < nx_minus_one) neighbors.push([xpos+1, ypos, index+1]);
+    if (xpos < nx_minus_one) { neighbors.push([xpos+1, ypos, index+1]); }
 
     // if there is a row above queue the neighbor above
-    if (index >= nx) neighbors.push([xpos, ypos-1, index-nx]);
+    if (index >= nx) { neighbors.push([xpos, ypos-1, index-nx]); }
 
     // if there is a row below queue the neighbor below
     var index_plus_y = index + nx;
-    if (index_plus_y < size) neighbors.push([xpos, ypos+1, index_plus_y]);
-    
+    if (index_plus_y < size) { neighbors.push([xpos, ypos+1, index_plus_y]); }
+
     // randomize the order in which we process the neighbors
     neighbors.shuffle();
     
@@ -314,8 +325,8 @@ avalanche2d.FolderSolver2D.prototype.distributeFoldersRandomOrder = function(xpo
         if (folder[cindex] > 3) {
             this.new_cells_to_process.push(cell);
             caused_avalanche = true;
-        };
-    };
+        }
+    }
     return caused_avalanche;
 };
 
@@ -336,8 +347,8 @@ avalanche2d.FolderSolver2D.prototype.step = function() {
                 folder[cell[2]] = folder_count-4;
                 this.distributeFolders(cell[0], cell[1], cell[2]);
             }
-        };
-    };
+        }
+    }
 };
 
 avalanche2d.FolderSolver2D.prototype.finish_with_brute_force = function() {
@@ -366,7 +377,7 @@ avalanche2d.FolderSolver2D.prototype.finish_with_brute_force = function() {
                     avalanche = avalanche || new_avalanche;
                     this.new_cells_to_process = [];
                 }
-            };
+            }
             row_index = row_index + nx;
         }
     }
@@ -379,16 +390,19 @@ avalanche2d.FolderSolver2D.prototype.finish_with_brute_force = function() {
 // Extend the Array object with a shuffle method
 
 Array.prototype.shuffle = function() {
+    var i, r, temp;
     var s = this, len = s.length; 
-    for(var i = len-1; i > 0; i--) {
-        var r = Math.floor(Math.random()*(i+1)), temp;
-        temp = s[i], s[i] = s[r], s[r] = temp;
+    for(i = len-1; i > 0; i--) {
+        r = Math.floor(Math.random()*(i+1));
+        temp = s[i];
+        s[i] = s[r];
+        s[r] = temp;
     } return this;
 };
 
 function createArray(size, fill) {
     fill = fill || 0;
-    var a;
+    var a, i;
     if (avalanche2d.array_type === "regular") {
         a = new Array(size);
     } else {
@@ -417,61 +431,62 @@ function createArray(size, fill) {
       case "Uint8Array":
         a = new Uint8Array(size);
         break;
-      };
-    };
+      }
+    }
     if (a[size-1] !== fill) {
-      for (var i = 0; i < size; i++) {
+      for (i = 0; i < size; i++) {
           a[i] = fill;
       }
-    };
+    }
     return a;
 }
 
 function copyArray (destination, source) {
+    var i;
     var source_length = source.length;
     var destination_length = destination.length;
-    for (i = 0; i < source_length; i++) destination[i] = source[i];
-};
+    for (i = 0; i < source_length; i++) { destination[i] = source[i]; }
+}
 
 /** @return true if x is between a and b. */
 // float a, float b, float x
 function between (a, b, x) {
     return x < Math.max(a, b) && x > Math.min(a, b);
-};
+}
 
 // float[] array
 function getMax (array) {
     return Math.max.apply( Math, array );
-};
+}
 
 // float[] array
 function getMin (array) {
     return Math.min.apply( Math, array );
-};
+}
 
 // FloatxxArray[] array
 function getMaxTypedArray (array) {
+    var test, i;
     var max = Number.MIN_VALUE;
     var length = array.length;
-    var test;
     for(i = 0; i < length; i++) {
         test = array[i];
-        max = test > max ? test : max
+        max = test > max ? test : max;
     }
     return max;
-};
+}
 
 // FloatxxArray[] array
 function getMinTypedArray (array) {
+    var test, i;
     var min = Number.MAX_VALUE;
     var length = array.length;
-    var test;
     for(i = 0; i < length; i++) {
         test = array[i];
-        min = test < min ? test : min
+        min = test < min ? test : min;
     }
     return min;
-};
+}
 
 // float[] array
 function getMaxAnyArray (array) {
@@ -480,17 +495,17 @@ function getMaxAnyArray (array) {
     }
     catch (e) {
         if (e instanceof TypeError) {
+            var test, i;
             var max = Number.MIN_VALUE;
             var length = array.length;
-            var test;
             for(i = 0; i < length; i++) {
                 test = array[i];
-                max = test > max ? test : max
+                max = test > max ? test : max;
             }
             return max;
         }
     }
-};
+}
 
 // float[] array
 function getMinAnyArray (array) {
@@ -499,26 +514,27 @@ function getMinAnyArray (array) {
     }
     catch (e) {
         if (e instanceof TypeError) {
+            var test, i;
             var min = Number.MAX_VALUE;
             var length = array.length;
-            var test;
             for(i = 0; i < length; i++) {
                 test = array[i];
-                min = test < min ? test : min
+                min = test < min ? test : min;
             }
             return min;
         }
     }
-};
+}
 
 function getAverage (array) {
+    var i;
     var acc = 0;
     var length = array.length;
     for (i = 0; i < length; i++) {
         acc += array[i];
-    };
+    }
     return acc / length;
-};
+}
 
 /**
 * HSV to RGB color conversion
@@ -549,7 +565,7 @@ function hsvToRgb(h, s, v) {
     s /= 100;
     v /= 100;
 
-    if(s == 0) {
+    if(s === 0) {
         // Achromatic (grey)
         r = g = b = v;
         return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
@@ -607,8 +623,8 @@ var green_color_table = [];
 var alpha_color_table = [];
 
 function setupRGBAColorTables () {
-    var rgb = [];
-    for(var i = 0; i < 256; i++) {
+    var i, rgb = [];
+    for(i = 0; i < 256; i++) {
         rgb = hsvToRgb(i, 100, 90);
         red_color_table[i]   = rgb[0];
         blue_color_table[i]  = rgb[1];
@@ -617,5 +633,5 @@ function setupRGBAColorTables () {
 }
 
 // export namespace
-if (root !== 'undefined') root.avalanche2d = avalanche2d;
+if (root !== 'undefined') { root.avalanche2d = avalanche2d; }
 })();
