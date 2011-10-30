@@ -70,7 +70,8 @@
       clear_canvas();
     };
 
-    var plot, gcanvas, gctx;
+    var gcanvas, gctx, cplot = {};
+    
     
     var chart = document.getElementById("chart"),
       cx = chart.clientWidth,
@@ -117,11 +118,10 @@
         // .style("background-fill", "#FFEEB6")
         .append("svg:g")
           .attr("transform", "translate(" + padding.left + "," + padding.top + ")");
- 
+
     var plot = vis.append("svg:rect")
         .attr("width", size.width)
         .attr("height", size.height)
-        // .attr("stroke", "none")
         .style("fill", "#EEEEEE")
         .attr("pointer-events", "all")
         .call(d3.behavior.zoom().on("zoom", redraw))
