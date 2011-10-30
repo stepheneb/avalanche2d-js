@@ -41,45 +41,47 @@
       
       // a simple JavaScript source code loader
       function myRequire(src, callback){
-        if (src.constructor == Array) {
-          var libraries = src;
+        var libraries;
+        if (src.constructor === Array) {
+          libraries = src;
         } else {
-          var libraries = [src];
+          libraries = [src];
         }
-        var script = document.createElement("script") 
+        var script = document.createElement("script"); 
         script.type = "text/javascript";
         // IE
         var ie = false;
         script.onreadystatechange = function () {
           ie = true;
-          if (script.readyState === 'loaded' || script.readyState == 'complete') {
+          if (script.readyState === 'loaded' || script.readyState === 'complete') {
             script.onreadystatechange = null;
             libraries.shift();
             if (libraries.length > 0) {
-              myRequire(libraries)
+              myRequire(libraries);
             }
             if (callback) {
               callback();            
             }
           }
-        }
+        };
         // Not IE
         script.onload = function () {
           if (!ie) {
             libraries.shift();
             if (libraries.length > 0) {
-              myRequire(libraries)
+              myRequire(libraries);
             }
             if (callback) {
               callback();            
             }
           }
-        }
+        };
         script.src = libraries[0];
         document.getElementsByTagName("head")[0].appendChild(script);
-      };
+      }
     </script>
 </head>
+<body>
 <div id="container">
   <div id="header-inner">
     <h1 id="title">Avalanche-JS Demo</h1>
@@ -123,7 +125,7 @@
       Avalanche2D-JS Benchmarks</a>. comparing the performance of the model and the model, visualization, and
       grapher in Scala and NetLogo and on various browsers and operating systems including Android and iOS tablets
       and smartphone systems.
-    <p>
+    </p>
     <p>
       The initial array of desks with folders consists of 100x100 cells. A yellow cell 
       indicates two folders on the desk, a blue cell is zero, green one, and red three 
