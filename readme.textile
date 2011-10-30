@@ -24,9 +24,15 @@ I'm working on new ways of being able to create and run models in html5 browser-
 
 While it would take a good deal more work to make a whole authoring environment that would be effective and productive for non-professional programmers I think this is a very successful proof-of-concept. At this point I think it would be relatively easy to convert a model that had turtles also.
 
-Seth Tisue, the lead NetLogo developer contributed "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo a simplified re-write of "Bureaucrats.v6":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo that runs about 20 times as fast as the original. "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo is more appropriate to use when comparing performance of a NetLogo model with this JavaScript adaptation.
+h2. Benchmarks
 
-Testing on Oct 20 and 28 2011 show this JavaScript adaptation runs about 15 times faster on Chrome than "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo when displaying folders and graph and about 8 times faster running just the computational model. See **Benchmarks** section below.
+Seth Tisue, the lead NetLogo developer contributed both "Bureaucrats-fast":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats-fast.nlogo a simplified re-write of "Bureaucrats.v6":http://stepheneb.github.com/avalanche2d-js/nlogo/Bureaucrats.v6.nlogo that runs about 20 times as fast as the original and a version of the model algorithm written in
+straight Scala "Bureaucrats.scala":nlogo/Bureaucrats-fast.nlogo. The speed of the Scala version should be comparable to the speed of a native Java adaptation.
+
+Testing  Oct 28 2011 show this JavaScript adaptation runs the model about the same speed as the native Scala version and about 12 times faster than "Bureaucrats-fast":logo/Bureaucrats-fast.nlogo">Bureaucrats-fast in NetLogo 5.0RC2. When displaying the folder visualization and graphing the JavaScript adaptation is 
+about 18 times faster (_Chrome 14.0.835.186 on a Mac OS X 10.6.8 system with a 2.66 GHz Intel Core i7_). 
+
+A Google Spreadsheet is available with more complete "Avalanche2D-JS Benchmarks":https://docs.google.com/spreadsheet/ccc?key=0AtvlFoSBUC5kdDM4cHJhU0I4NGg5TjlWRkQ0ZExpcGc comparing the performance of the model and the model, visualization, and grapher in Scala and NetLogo and on various browsers and operating systems including Android and iOS tablets and smartphone systems.
 
 h2. Self-Organised Criticality References
 
@@ -47,32 +53,3 @@ h2. Programming References
 # "W3C: Web Audio API":https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html
 # "Web Audio Examples":http://chromium.googlecode.com/svn/trunk/samples/audio/index.html
 
-h2. Benchmarks
-
-h3. Time for modeling and rendering to both the model canvas and the real-time graph rendering using a Canvas overlay over the D3.js SVG graph. [1]
-
-|_. Mac OS X 10.6.8 [1]&nbsp;[2]          |_\2>. ave rate (model-steps/s) for 5000 steps |
-|_. Browser                               |_=.                  |_=.  graph/canvas off   |
-| Chrome 14.0.835.186                     |=.      9578         |=.          12594       |
-| Safari v5.1.1 (6534.51.22)              |=.      3576         |=.           4840       |
-| FireFox 7.0.1                           |=.      2291         |=.           3191       |
-|                                         |                     |                        |
-|_. Windows 7 in VirtualBox [1]&nbsp;[2]  |_\2>.                                         |
-| Chrome 14.0.835.202                     |=.      5165         |=.          10661       |
-| IE v9.0.8112.16421                      |=.      3941         |=.           5682       |
-| FireFox 7.0.1                           |=.      2484         |=.           3934       |
-| Safari v5.1.1 (7534.51.22)              |=.       630         |=.           1089       |
-|                                         |                     |                        |
-|_. NetLogo 5.0RC2 [3]&nbsp;[2]           |_\2>.                                         |
-| Bureaucrats-fast                        |=.       644         |=.           1568       |
-|                                         |                     |                        |
-|_. Tablets and SmartPhones [3]           |_\2>.                                         |
-| iPad2, iOS 4.3.1                        |=.       130         |=.            263       |
-| iPhone 4S, iOS 5.0                      |=.       203         |=.                      |
-| Samsung Galaxy tablet, Android 3.1      |=.       243         |=.            660       |
-
-fn1. _Data collected October 25, 2011_
-
-fn2. _MacBook Pro, 2.66 GHz Intel Core i7, Mac OS X 10.6.8_
-
-fn3. _Data collected October 21, 2011_
