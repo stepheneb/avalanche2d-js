@@ -452,9 +452,12 @@
             xaxis1 = downscalex.domain()[0],
             xaxis2 = downscalex.domain()[1],
             xextent = xaxis2 - xaxis1;
-          if (rupx != 0) {
-              var changex, new_domain;
-              changex = 1 + (downx / rupx - 1) * (xextent/(downx-xaxis1))/2;
+          if (rupx !== 0) {
+              var changex, dragx_factor, new_domain;
+              // changex = 1 + (downx / rupx - 1) * (xextent/(downx-xaxis1));
+              // new_domain = [xaxis1, xaxis1 + (xextent * changex)];
+              dragx_factor = xextent/downx;
+              changex = 1 + (downx / rupx - 1) * (xextent/(downx-xaxis1))/dragx_factor;
               new_domain = [xaxis1, xaxis1 + (xextent * changex)];
               x.domain(new_domain);
               redraw();
@@ -463,15 +466,18 @@
           d3.event.stopPropagation();
         }
         if (!isNaN(downy)) {
-            rupy = downscaley.invert(p[1]),
+            var rupy = downscaley.invert(p[1]),
             yaxis1 = downscaley.domain()[1],
             yaxis2 = downscaley.domain()[0],
             yextent = yaxis2 - yaxis1;
-          if (rupy != 0) {
-              var changey, new_domain;
-              changey = 1 + (rupy / downy - 1) * (yextent/(downy-yaxis2));
-              new_domain = [yaxis1 + (yextent * changey), yaxis1];
-              y.domain(new_domain);
+          if (rupy !== 0) {
+              var changey, dragy_factor, new_range;
+              // changey = 1 + (rupy / downy - 1) * (yextent/(downy-yaxis2));
+              // new_range = [yaxis1 + (yextent * changey), yaxis1];
+              dragy_factor = yextent/downy;
+              changey = 1 - (rupy / downy - 1) * (yextent/(downy-yaxis1))/dragy_factor;
+              new_range = [yaxis1 + (yextent * changey), yaxis1];
+              y.domain(new_range);
               redraw();
           }
           d3.event.preventDefault();
