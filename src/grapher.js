@@ -1,3 +1,10 @@
+/*global 
+  window, document navigator 
+  requestAnimFrame cancelRequestAnimFrame myRequire
+  avalanche2d grapher sprintf d3
+  graph
+*/
+
 (function(){ 
   
   grapher = { version: "0.0.1" };
