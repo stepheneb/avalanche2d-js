@@ -133,8 +133,8 @@
           .text("Average Number of folders on a desk")
           .attr("x", size.width/2)
           .attr("dy","-1em")
-          .style("text-anchor","middle")
-    };
+          .style("text-anchor","middle");
+    }
 
     // Add the x-axis label
     if (graph.xlabel) {
@@ -143,8 +143,8 @@
           .attr("x", size.width/2)
           .attr("y", size.height)
           .attr("dy","2.4em")
-          .style("text-anchor","middle")
-    };
+          .style("text-anchor","middle");
+    }
 
     // add y-axis label
     if (graph.ylabel) {
@@ -152,13 +152,8 @@
           .append("svg:text")
               .text("Average Number of folders on a desk")
               .style("text-anchor","middle")
-              .attr("transform","translate(" + -50 + " " + size.height/2+") rotate(-90)")
-    };
-
-    //
-    vis.append("svg:path")
-        .attr("class", "line")
-        .attr("d", line(points));
+              .attr("transform","translate(" + -50 + " " + size.height/2+") rotate(-90)");
+    }
 
     initialize_canvas();
 
@@ -177,12 +172,12 @@
         .on("keydown", keydown);
 
     function new_data(d) {
-      points = indexedData(d, 0)
-    };
+      points = indexedData(d, 0);
+    }
     
     // custom generation of line path 'd' attribute string
     // using memoized attr_str ... not much faster than d3
-    var generate_path_attribute = function () {
+    var generate_path_attribute = (function () {
       var attr_str = '';
       var gen = function(pts, x, y) {
         var result = attr_str, 
@@ -190,19 +185,19 @@
             n = pts.length, 
             path = [],
             value;
-        if (result.length == 0) {
+        if (result.length === 0) {
           path.push("M",
             x.call(self, pts[0].x, 0), ",", 
             y.call(self, pts[0].y, 0));
-          i++
-        };
-        while (++i < n) path.push("L",
-          x.call(self, pts[i].x, i), ",", 
-          y.call(self, pts[i].y, i)); 
-        return attr_str += path.join("");
+          i++;
+        }
+        while (++i < n) { 
+          path.push("L", x.call(self, pts[i].x, i), ",", y.call(self, pts[i].y, i));
+        } 
+        return (attr_str += path.join(""));
       };
       return gen;
-    }();
+    }());
     
     function add_point(p) {
       var len = points.length;
@@ -211,7 +206,7 @@
       var newx = x.call(self, len, len);
       var newy = y.call(self, p, len);
       line_seglist.appendItem(line_path.createSVGPathSegLinetoAbs(newx, newy));
-    };
+    }
     
     function add_canvas_point(p) {
       var len = points.length;
@@ -227,50 +222,54 @@
       gctx.closePath();
       gctx.stroke();
       // FIXME: FireFox bug
-    };
+    }
 
     function clear_canvas() {
       gcanvas.width = gcanvas.width;
       gctx.fillStyle = "rgba(0,255,0, 0.05)";
       gctx.fillRect(0, 0, gcanvas.width, gcanvas.height);
-    };
+    }
     
     function show_canvas() {
       gcanvas.style.zIndex = 100;
-    };
+    }
 
     function hide_canvas() {
       gcanvas.style.zIndex = -100;
-    };
+    }
 
     function initialize_canvas() {
-      plot = {}
-      plot.rect = chart.children[0].getElementsByTagName("rect")[0]
-      plot.width = plot.rect.width['baseVal'].value
-      plot.height = plot.rect.height['baseVal'].value
-      plot.left = plot.rect.getCTM().e
-      plot.top = plot.rect.getCTM().f
+      cplot.rect = chart.children[0].getElementsByTagName("rect")[0];
+      cplot.width = cplot.rect.width['baseVal'].value;
+      cplot.height = cplot.rect.height['baseVal'].value;
+      cplot.left = cplot.rect.getCTM().e;
+      cplot.top = cplot.rect.getCTM().f;
 
       gcanvas = document.createElement('canvas');
       chart.appendChild(gcanvas);
-      gcanvas.style.position = 'absolute'
-      gcanvas.width = plot.width;
-      gcanvas.height = plot.height;
-      gcanvas.offsetLeft = plot.left;
-      gcanvas.offsetTop = plot.top;
-      gcanvas.style.left = plot.left + 'px'
-      gcanvas.style.top = plot.top + 'px'
+      gcanvas.style.position = 'absolute';
+      gcanvas.width = cplot.width;
+      gcanvas.height = cplot.height;
+      gcanvas.offsetLeft = cplot.left;
+      gcanvas.offsetTop = cplot.top;
+      gcanvas.style.left = cplot.left + 'px';
+      gcanvas.style.top = cplot.top + 'px';
       gctx = gcanvas.getContext( '2d' );
       gctx.globalCompositeOperation = "source-over";
       gctx.lineWidth = 1;
       gctx.fillStyle = "rgba(0,255,0, 0.05)";
       gctx.fillRect(0, 0, gcanvas.width, gcanvas.height);
       gctx.strokeStyle = "rgba(255,65,0, 1.0)";
-      gcanvas.style.border = 'solid 1px red'
-      gcanvas.style.zIndex = -100
-    };
+      gcanvas.style.border = 'solid 1px red';
+      gcanvas.style.zIndex = -100;
+    }
 
+    //
+    // draw the data
+    //
     function update() {
+      var oldx, oldy, newx, newy, i;
+
       var lines = vis.select("path").attr("d", line(points));
 
       // update real-time canvas line graph
@@ -313,7 +312,7 @@
     }
  
     function mousemove() {
-      if (!dragged) return;
+      if (!dragged) { return; }
       var m = d3.svg.mouse(vis.node());
       dragged.x = x.invert(Math.max(0, Math.min(size.width, m[0])));
       dragged.y = y.invert(Math.max(0, Math.min(size.height, m[1])));
@@ -321,13 +320,13 @@
     }
  
     function mouseup() {
-      if (!dragged) return;
+      if (!dragged) { return; }
       mousemove();
       dragged = null;
     }
  
     function keydown() {
-      if (!selected) return;
+      if (!selected) { return; }
       switch (d3.event.keyCode) {
         case 8: // backspace
         case 46: { // delete
@@ -340,15 +339,18 @@
       }
     }
  
+    //
+    // redraw the plot canvas when it is translated or axes are re-scaled
+    //
     function redraw() {
       if (d3.event && d3.event.transform && isNaN(downx) && isNaN(downy)) {
           d3.event.transform(x, y);
-      };
- 
+      }
+
       var fx = x.tickFormat(10),
           fy = y.tickFormat(10);
  
-      // Regenerate x-ticks…
+      // Regenerate x-ticks
       var gx = vis.selectAll("g.x")
           .data(x.ticks(10), String)
           .attr("transform", tx);
@@ -382,7 +384,7 @@
  
       gx.exit().remove();
  
-      // Regenerate y-ticks…
+      // Regenerate y-ticks
       var gy = vis.selectAll("g.y")
           .data(y.ticks(10), String)
           .attr("transform", ty);
@@ -425,11 +427,14 @@
           n = dataset.length,
           points = [];
       for (i = 0; i < n;  i++) {
-        points.push( { x: i+start_index, y: dataset[i] } )
-      };
+        points.push({ x: i+start_index, y: dataset[i] });
+      }
       return points;
-    };
- 
+    }
+
+    //
+    // axis scaling
+    //
     // attach the mousemove and mouseup to the body
     // in case one wonders off the axis line
     d3.select('body')
@@ -449,7 +454,7 @@
           }
           d3.event.preventDefault();
           d3.event.stopPropagation();
-        };
+        }
         if (!isNaN(downy)) {
             rupy = downscaley.invert(p[1]),
             yaxis1 = downscaley.domain()[1],
@@ -473,14 +478,14 @@
               d3.event.preventDefault();
               d3.event.stopPropagation();
               // graph.call(d3.behavior.zoom().on("zoom", redraw));
-          };
+          }
           if (!isNaN(downy)) {
               redraw();
               downy = Math.NaN;
               d3.event.preventDefault();
               d3.event.stopPropagation();
               // graph.call(d3.behavior.zoom().on("zoom", redraw));
-          };
+          }
           // d3.event.preventDefault();
           // d3.event.stopPropagation();
       });
