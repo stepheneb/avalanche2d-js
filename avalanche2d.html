@@ -247,9 +247,8 @@
         }
       };
 
-      // avalanche2d.setupColorDivs();
-      avalanche2d.setupRGBAColorTables();
-      
+      var canvas = document.getElementById("patchesCanvas");
+
       var model, array_selection;
 
       var folder_size = 100;
@@ -258,7 +257,7 @@
 
       function selectArrayTypeChange() {
         array_selection = select_array_type.value;
-        model = new avalanche2d.Model(model_options, array_selection);
+        model = new avalanche2d.Model(canvas, model_options, array_selection);
       };
       
       select_array_type.onchange = selectArrayTypeChange;
@@ -282,7 +281,7 @@
         folder_size = +select_desk_array_size.value;
         max_model_step = folder_size * folder_size / 2;
         model_options = { model: { nx: folder_size, ny: folder_size, initial_value: 2 }};
-        model = new avalanche2d.Model(model_options, array_selection);
+        model = new avalanche2d.Model(canvas, model_options, array_selection);
         graph_data = [2];
         graph.change_xaxis(max_model_step);
         modelReset();
@@ -304,7 +303,6 @@
       var step_model_warning = document.getElementById("step-model-warning");
       var stats = document.getElementById("stats");
 
-      var canvas = document.getElementById("patchesCanvas");
       var run_mode;
 
       var start_time  = +new Date();
@@ -357,7 +355,7 @@
         if (modelRunRequest) cancelRequestAnimFrame(modelRunRequest);
         displayStats();
         if (!show_visualization.checked) {
-          avalanche2d.displayFolderCanvas(canvas, model);
+          model.renderFolderCanvas();
         };
         graph.hide_canvas();
         graph.new_data(graph_data);
@@ -370,7 +368,7 @@
         runModelStep();
         if (!show_visualization.checked) {
           displayStats();
-          avalanche2d.displayFolderCanvas(canvas, model);
+          model.renderFolderCanvas();
         };
         graph.hide_canvas();
         graph.new_data(graph_data);
@@ -402,14 +400,14 @@
             step_time = +new Date();
             modelStop();
           }
-          avalanche2d.displayFolderTable(folder_data, model);
+          model.renderFolderTable(folder_data);
         }
       };
       
       function modelReset() {
         if (modelRunRequest) cancelRequestAnimFrame(modelRunRequest);
         model.reset();
-        avalanche2d.displayFolderCanvas(canvas, model);
+        model.renderFolderCanvas();
         folder_data.innerHTML = '';
         stats.innerHTML = '';
         step_model_warning.innerHTML = null;
@@ -425,7 +423,7 @@
       };
 
       step_model.onchange = modelController;
-      avalanche2d.displayFolderCanvas(canvas, model);
+      model.renderFolderCanvas();
 
       function displayGraph() {
         if (show_graph.checked) {
@@ -439,7 +437,7 @@
 
       function displayFolderTable() {
         if (show_data_table.checked) {
-          avalanche2d.displayFolderTable(folder_data, model);
+          model.renderFolderTable(folder_data);
         } else {
           folder_data.innerHTML = '';
         };
@@ -451,9 +449,9 @@
           last_step_time = +new Date(step_time);
           model.nextStep();
           graph_data.push(model.averageFolders);
-          if (show_visualization.checked) avalanche2d.displayFolderCanvas(canvas, model);
+          if (show_visualization.checked) model.renderFolderCanvas();
           if (show_graph.checked) graph.add_canvas_point(model.averageFolders);
-          if (show_data_table.checked) avalanche2d.displayFolderTable(folder_data, model);
+          if (show_data_table.checked) model.renderFolderTable(folder_data);
           step_time = +new Date();
           step_duration = step_time - last_step_time;
           if (show_visualization.checked) displayStats();

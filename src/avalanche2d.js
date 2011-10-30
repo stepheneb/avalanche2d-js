@@ -7,68 +7,20 @@
 
 var avalanche2d = {};
 var root = this;
+
 avalanche2d.VERSION = '0.1.0';
 
 // Constants
 
 avalanche2d.array_type = "regular";
 
-// Extend the Array object with a shuffle method
-
-Array.prototype.shuffle = function() {
-    var s = this, len = s.length; 
-    for(var i = len-1; i > 0; i--) {
-        var r = Math.floor(Math.random()*(i+1)), temp;
-        temp = s[i], s[i] = s[r], s[r] = temp;
-    } return this;
-};
-
-function createArray(size, fill) {
-    fill = fill || 0;
-    var a;
-    if (avalanche2d.array_type === "regular") {
-        a = new Array(size);
-    } else {
-      switch(avalanche2d.array_type) {
-      case "Float64Array":
-        a = new Float64Array(size);
-        break;
-      case "Float32Array":
-        a = new Float32Array(size);
-        break;
-      case "Int32Array":
-        a = new Int32Array(size);
-        break;
-      case "Int16Array":
-        a = new Int16Array(size);
-        break;
-      case "Int8Array":
-        a = new Int8Array(size);
-        break;
-      case "Uint32Array":
-        a = new Uint32Array(size);
-        break;
-      case "Uint16Array":
-        a = new Uint16Array(size);
-        break;
-      case "Uint8Array":
-        a = new Uint8Array(size);
-        break;
-      };
-    };
-    if (a[size-1] !== fill) {
-      for (var i = 0; i < size; i++) {
-          a[i] = fill;
-      }
-    };
-    return a;
-}
-
 avalanche2d.config = {
     model: { nx: 50, ny: 50, initial_value: 2 }
 };
 
-avalanche2d.Model = function(options, array_type) {
+avalanche2d.Model = function(canvas, options, array_type) {
+
+    this.canvas = canvas;
 
     if (!array_type) array_type = "regular";
     avalanche2d.array_type = array_type;
@@ -100,6 +52,8 @@ avalanche2d.Model.prototype.reset = function() {
 
     this.averageFolders = this.options.model.initial_value;
     
+    this.setupCanvas();
+
     this.folderSolver = new avalanche2d.FolderSolver2D(this);
 };
 
@@ -110,101 +64,113 @@ avalanche2d.Model.prototype.nextStep = function() {
 };
 
 //
-// Utilities
+// Canvas Folder Array Rendering
 //
 
-avalanche2d.copyArray = function(destination, source) {
-    var source_length = source.length;
-    var destination_length = destination.length;
-    for (i = 0; i < source_length; i++) destination[i] = source[i];
-};
+avalanche2d.Model.prototype.setupCanvas = function() {
+    if (red_color_table.length == 0) setupRGBAColorTables();
+    if (this.canvas) {
+      this.ctx = this.canvas.getContext('2d');
+      this.ctx.fillStyle = "rgb(0,0,0)";
+      this.ctx.globalCompositeOperation = "destination-atop";
 
-/** @return true if x is between a and b. */
-// float a, float b, float x
-avalanche2d.between = function(a, b, x) {
-    return x < Math.max(a, b) && x > Math.min(a, b);
-};
+      this.canvas_columns = this.nx;
+      this.canvas_rows = this.ny;
 
-// float[] array
-avalanche2d.getMax = function(array) {
-    return Math.max.apply( Math, array );
-};
+      this.canvas.style.width = this.canvas.clientWidth + 'px';
+      this.canvas.style.height = this.canvas.clientHeight + 'px';
 
-// float[] array
-avalanche2d.getMin = function(array) {
-    return Math.min.apply( Math, array );
-};
+      this.canvas.width = this.canvas_columns;
+      this.canvas.height = this.canvas_rows;
 
-// FloatxxArray[] array
-avalanche2d.getMaxTypedArray = function(array) {
-    var max = Number.MIN_VALUE;
-    var length = array.length;
-    var test;
-    for(i = 0; i < length; i++) {
-        test = array[i];
-        max = test > max ? test : max
+      this.imageData = this.ctx.getImageData(0, 0, this.canvas_columns, this.canvas_rows);
+      this.pd = this.imageData.data;
+      this.initialiseAlphaPixels();
+
+      //  folder hue mapping:
+      //  count    color      hue
+      // ---------------------------
+      //   0       blue       183
+      //   1       green      115
+      //   2       yellow     59
+      //   3       orange     30
+      //   4       red        0
+      //
+      this.folder_hue_map = [183, 115, 59, 30, 0, 0, 0, 0, 0];
+
+      this.renderFolderCanvas();
     }
-    return max;
 };
 
-// FloatxxArray[] array
-avalanche2d.getMinTypedArray = function(array) {
-    var min = Number.MAX_VALUE;
-    var length = array.length;
-    var test;
-    for(i = 0; i < length; i++) {
-        test = array[i];
-        min = test < min ? test : min
-    }
-    return min;
+avalanche2d.Model.prototype.putCanvas = function() {
+  this.ctx.putImageData(this.imageData, 0, 0);
 };
 
-// float[] array
-avalanche2d.getMaxAnyArray = function(array) {
-    try {
-        return Math.max.apply( Math, array );
-    }
-    catch (e) {
-        if (e instanceof TypeError) {
-            var max = Number.MIN_VALUE;
-            var length = array.length;
-            var test;
-            for(i = 0; i < length; i++) {
-                test = array[i];
-                max = test > max ? test : max
-            }
-            return max;
+avalanche2d.Model.prototype.renderFolderCanvas = function() {
+    var folder_count, pix_index, ycols;
+    var folder = this.folder;
+    var nx = this.nx;
+    var ny = this.ny;
+    var pixel_data = this.pd;
+    var folder_hue_map = this.folder_hue_map;
+    for (var y = 0; y < ny; y++) {
+        ycols = y * ny;
+        pix_index = ycols * 4;
+        for (var x = 0; x < nx; x++) {
+            folder_count = folder[ycols + x];
+            hue =  (folder_count > 4) ? 0 : folder_hue_map[folder_count]
+            pixel_data[pix_index]   = red_color_table[hue];
+            pixel_data[pix_index+1] = blue_color_table[hue];
+            pixel_data[pix_index+2] = green_color_table[hue];
+            pixel_data[pix_index+3] = 255;
+            pix_index += 4;
         }
-    }
-};
-
-// float[] array
-avalanche2d.getMinAnyArray = function(array) {
-    try {
-        return Math.min.apply( Math, array );
-    }
-    catch (e) {
-        if (e instanceof TypeError) {
-            var min = Number.MAX_VALUE;
-            var length = array.length;
-            var test;
-            for(i = 0; i < length; i++) {
-                test = array[i];
-                min = test < min ? test : min
-            }
-            return min;
-        }
-    }
-};
-
-avalanche2d.getAverage = function(array) {
-    var acc = 0;
-    var length = array.length;
-    for (i = 0; i < length; i++) {
-        acc += array[i];
     };
-    return acc / length;
+    this.putCanvas();
 };
+
+avalanche2d.Model.prototype.initialiseAlphaPixels = function() {
+    var alpha_index;
+    var nx = this.nx;
+    var ny = this.ny;
+    var pixel_data = this.pd;
+    for (var y = 0; y < ny; y++) {
+        ycols = y * ny;
+        alpha_index = ycols * 4 + 3;
+        for (var x = 0; x < nx; x++) {
+            pixel_data[alpha_index] = 255;
+            alpha_index += 4;
+        }
+    };
+};
+
+//
+// Table Folder Array Rendering
+//
+
+avalanche2d.Model.prototype.renderFolderTable = function(destination) {
+    var columns = this.nx;
+    var rows = this.ny;
+    var ycols, ycols_plus_x;
+    var folder_count;
+    var folder = this.folder;
+    var table_strings = ["    "];
+    for (y = 0; y < rows; y++) {
+      table_strings[table_strings.length] = sprintf("%2.0f ", y);
+    };
+    table_strings[table_strings.length] = '\n';
+    for (y = 0; y < rows; y++) {
+        ycols = y * rows;
+        table_strings[table_strings.length] = sprintf("%2.0f: ", y);
+        for (x = 0; x < columns; x++) {
+            ycols_plus_x = ycols + x;
+            folder_count = folder[ycols_plus_x];
+            table_strings[table_strings.length] = sprintf("%2.0f ", folder_count);
+        }
+        table_strings[table_strings.length] = '\n';
+    }
+    destination.innerHTML = table_strings.join("");
+}
 
 // *******************************************************
 //
@@ -228,7 +194,7 @@ avalanche2d.FolderSolver2D.prototype.solve = function() {
     if (this.drop()) {
         this.step()
     }
-    this.model.averageFolders = avalanche2d.getAverage(this.model.folder);
+    this.model.averageFolders = getAverage(this.model.folder);
 };
 
 avalanche2d.FolderSolver2D.prototype.drop = function() {
@@ -309,7 +275,7 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
 };
 
 avalanche2d.FolderSolver2D.prototype.distributeFoldersRandomOrder = function(xpos, ypos, index) {
-    // Currently about 10% slower than the non-random distributeFolders() function
+    // Currently about 50% slower than the non-random distributeFolders() function
     var folder = this.model.folder;
     var size = this.model.ARRAY_SIZE;
     
@@ -339,10 +305,13 @@ avalanche2d.FolderSolver2D.prototype.distributeFoldersRandomOrder = function(xpo
     // randomize the order in which we process the neighbors
     neighbors.shuffle();
     
+    var cindex;
+    
     while (neighbors.length > 0) {
         cell = neighbors.shift();
-        folder[cell[2]]++;
-        if (folder[cell[2]] > 3) {
+        cindex = cell[2];
+        folder[cindex]++;
+        if (folder[cindex] > 3) {
             this.new_cells_to_process.push(cell);
             caused_avalanche = true;
         };
@@ -403,12 +372,153 @@ avalanche2d.FolderSolver2D.prototype.finish_with_brute_force = function() {
     }
 };
 
-// *******************************************************
 //
-//   Graphics Canvas
+// Utilities
 //
-// *******************************************************
 
+// Extend the Array object with a shuffle method
+
+Array.prototype.shuffle = function() {
+    var s = this, len = s.length; 
+    for(var i = len-1; i > 0; i--) {
+        var r = Math.floor(Math.random()*(i+1)), temp;
+        temp = s[i], s[i] = s[r], s[r] = temp;
+    } return this;
+};
+
+function createArray(size, fill) {
+    fill = fill || 0;
+    var a;
+    if (avalanche2d.array_type === "regular") {
+        a = new Array(size);
+    } else {
+      switch(avalanche2d.array_type) {
+      case "Float64Array":
+        a = new Float64Array(size);
+        break;
+      case "Float32Array":
+        a = new Float32Array(size);
+        break;
+      case "Int32Array":
+        a = new Int32Array(size);
+        break;
+      case "Int16Array":
+        a = new Int16Array(size);
+        break;
+      case "Int8Array":
+        a = new Int8Array(size);
+        break;
+      case "Uint32Array":
+        a = new Uint32Array(size);
+        break;
+      case "Uint16Array":
+        a = new Uint16Array(size);
+        break;
+      case "Uint8Array":
+        a = new Uint8Array(size);
+        break;
+      };
+    };
+    if (a[size-1] !== fill) {
+      for (var i = 0; i < size; i++) {
+          a[i] = fill;
+      }
+    };
+    return a;
+}
+
+function copyArray (destination, source) {
+    var source_length = source.length;
+    var destination_length = destination.length;
+    for (i = 0; i < source_length; i++) destination[i] = source[i];
+};
+
+/** @return true if x is between a and b. */
+// float a, float b, float x
+function between (a, b, x) {
+    return x < Math.max(a, b) && x > Math.min(a, b);
+};
+
+// float[] array
+function getMax (array) {
+    return Math.max.apply( Math, array );
+};
+
+// float[] array
+function getMin (array) {
+    return Math.min.apply( Math, array );
+};
+
+// FloatxxArray[] array
+function getMaxTypedArray (array) {
+    var max = Number.MIN_VALUE;
+    var length = array.length;
+    var test;
+    for(i = 0; i < length; i++) {
+        test = array[i];
+        max = test > max ? test : max
+    }
+    return max;
+};
+
+// FloatxxArray[] array
+function getMinTypedArray (array) {
+    var min = Number.MAX_VALUE;
+    var length = array.length;
+    var test;
+    for(i = 0; i < length; i++) {
+        test = array[i];
+        min = test < min ? test : min
+    }
+    return min;
+};
+
+// float[] array
+function getMaxAnyArray (array) {
+    try {
+        return Math.max.apply( Math, array );
+    }
+    catch (e) {
+        if (e instanceof TypeError) {
+            var max = Number.MIN_VALUE;
+            var length = array.length;
+            var test;
+            for(i = 0; i < length; i++) {
+                test = array[i];
+                max = test > max ? test : max
+            }
+            return max;
+        }
+    }
+};
+
+// float[] array
+function getMinAnyArray (array) {
+    try {
+        return Math.min.apply( Math, array );
+    }
+    catch (e) {
+        if (e instanceof TypeError) {
+            var min = Number.MAX_VALUE;
+            var length = array.length;
+            var test;
+            for(i = 0; i < length; i++) {
+                test = array[i];
+                min = test < min ? test : min
+            }
+            return min;
+        }
+    }
+};
+
+function getAverage (array) {
+    var acc = 0;
+    var length = array.length;
+    for (i = 0; i < length; i++) {
+        acc += array[i];
+    };
+    return acc / length;
+};
 
 /**
 * HSV to RGB color conversion
@@ -496,7 +606,7 @@ var blue_color_table  = [];
 var green_color_table = [];
 var alpha_color_table = [];
 
-avalanche2d.setupRGBAColorTables = function() {
+function setupRGBAColorTables () {
     var rgb = [];
     for(var i = 0; i < 256; i++) {
         rgb = hsvToRgb(i, 100, 90);
@@ -504,81 +614,6 @@ avalanche2d.setupRGBAColorTables = function() {
         blue_color_table[i]  = rgb[1];
         green_color_table[i] = rgb[2];
     }
-}
-
-avalanche2d.displayFolderCanvas = function(canvas, model) {
-    if (red_color_table.length == 0) {
-        avalanche2d.setupRGBAColorTables;
-    };
-    var ctx = canvas.getContext('2d');
-    ctx.fillStyle = "rgb(0,0,0)";
-    ctx.globalCompositeOperation = "destination-atop";
-
-    var columns = model.nx;
-    var rows = model.ny;
-
-    canvas.style.width = canvas.clientWidth + 'px';
-    canvas.style.height = canvas.clientHeight + 'px';
-
-    canvas.width = columns;
-    canvas.height = rows;
-    
-    var hue, rgb;
-
-    //  folder hue mapping:
-    //  count    color      hue
-    // ---------------------------
-    //   0       blue       183
-    //   1       green      115
-    //   2       yellow     59
-    //   3       orange     30
-    //   4       red        0
-    //
-    var folder_hue_map = [183, 115, 59, 30, 0];
-    
-    var ycols;
-
-    var folder_count;
-    var imageData = ctx.getImageData(0, 0, columns, rows);
-    var data = imageData.data;
-    var pix_index = 0;
-    for (var y = 0; y < rows; y++) {
-        ycols = y * rows;
-        pix_index = ycols * 4;
-        for (var x = 0; x < columns; x++) {
-            folder_count = model.folder[ycols + x];
-            hue =  (folder_count > 4) ? 0 : folder_hue_map[folder_count]
-            data[pix_index]     = red_color_table[hue];
-            data[pix_index + 1] = blue_color_table[hue];
-            data[pix_index + 2] = green_color_table[hue];
-            data[pix_index + 3] = 255;
-            pix_index += 4;
-        }
-    };
-    ctx.putImageData(imageData, 0, 0);
-}
-
-avalanche2d.displayFolderTable = function(destination, model) {
-    var columns = model.nx;
-    var rows = model.ny;
-    var ycols, ycols_plus_x;
-    var folder_count;
-    var table_strings = ["    "];
-    for (y = 0; y < rows; y++) {
-      table_strings[table_strings.length] = sprintf("%2.0f ", y);
-    };
-    table_strings[table_strings.length] = '\n';
-    for (y = 0; y < rows; y++) {
-        ycols = y * rows;
-        table_strings[table_strings.length] = sprintf("%2.0f: ", y);
-        for (x = 0; x < columns; x++) {
-            ycols_plus_x = ycols + x;
-            folder_count = model.folder[ycols_plus_x];
-            table_strings[table_strings.length] = sprintf("%2.0f ", folder_count);
-        }
-        table_strings[table_strings.length] = '\n';
-    }
-    destination.innerHTML = table_strings.join("");
 }
 
 // export namespace
