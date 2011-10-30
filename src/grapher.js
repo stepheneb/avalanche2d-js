@@ -133,7 +133,17 @@
               d3.event.stopPropagation();
           }
         });
- 
+
+    vis.append("svg:svg")
+        .attr("top", 0)
+        .attr("left", 0)
+        .attr("width", size.width)
+        .attr("height", size.height)
+        .attr("viewBox", "0 0 "+size.width+" "+size.height)
+        .append("svg:path")
+            .attr("class", "line")
+            .attr("d", line(points))
+    
     // add Chart Title
     if (graph.title) {
       vis.append("svg:text")
