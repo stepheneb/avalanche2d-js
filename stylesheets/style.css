@@ -81,6 +81,13 @@ circle {
     fill: #ff7f0e;
     stroke: #ff7f0e; }
 
+g.y {
+  font-size: 0.9em;
+}
+
+g.x {
+  font-size: 0.9em;
+}
 
 a {
     color: #1170A3 !important;
