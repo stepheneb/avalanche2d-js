@@ -49,7 +49,7 @@ select_array_type.onchange();
 var graph_data = [2];
 
 var graph = grapher.graph({
-  "title": null,
+  "title": "Average Number of folders on a desk",
   "xlabel": "Model Step Count",
   "xmin": 0, "xmax": 5000,
   "ylabel": null,
