@@ -3,10 +3,6 @@
 <head>
   <title>Avalanche-JS Demo</title>
   <link href="stylesheets/style.css" rel="stylesheet" type="text/css"/>
-  <script src="lib/sprintf.js" type="text/javascript" ></script>
-  <script src="src/grapher.js" type="text/javascript" ></script>
-  <script src="lib/d3/d3.js" type="text/javascript" ></script>
-  <script src="src/request-animation.js" type="text/javascript" ></script>
   <script src="src/myrequire.js" type="text/javascript" ></script>
   <style type="text/css">
     #patchesCanvas { 
@@ -59,8 +55,9 @@
       about 18 times faster (<i>Chrome 14.0.835.186 on a Mac OS X 10.6.8 system with a 2.66 GHz Intel Core i7</i>).
     </p>
     <p>
-      A Google Spreadsheet is available with more complete <a href="https://docs.google.com/spreadsheet/ccc?key=0AtvlFoSBUC5kdDM4cHJhU0I4NGg5TjlWRkQ0ZExpcGc">
-      Avalanche2D-JS Benchmarks</a>. comparing the performance of the model and the model, visualization, and
+      A Google Spreadsheet is available with more complete 
+      <a href="https://docs.google.com/spreadsheet/ccc?key=0AtvlFoSBUC5kdDM4cHJhU0I4NGg5TjlWRkQ0ZExpcGc">
+      Avalanche2D-JS Benchmarks</a> comparing the performance of the model and the model, visualization, and
       grapher in Scala and NetLogo and on various browsers and operating systems including Android and iOS tablets
       and smartphone systems.
     </p>
@@ -179,7 +176,12 @@
 </div>
 <script type="text/javascript">
   window.onload=function() {
-    myRequire([ 'src/avalanche2d.js', 'src/a2d.js' ]);
+    myRequire(["lib/sprintf.js", 
+               "src/request-animation.js", 
+               "src/grapher.js", 
+               "lib/d3/d3.js", 
+               "src/avalanche2d.js", 
+               "src/a2d.js" ]);
   };
 </script>
 </body>
