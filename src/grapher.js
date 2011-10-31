@@ -462,8 +462,6 @@
             xextent = xaxis2 - xaxis1;
           if (rupx !== 0) {
               var changex, dragx_factor, new_domain;
-              // changex = 1 + (downx / rupx - 1) * (xextent/(downx-xaxis1));
-              // new_domain = [xaxis1, xaxis1 + (xextent * changex)];
               dragx_factor = xextent/downx;
               changex = 1 + (downx / rupx - 1) * (xextent/(downx-xaxis1))/dragx_factor;
               new_domain = [xaxis1, xaxis1 + (xextent * changex)];
@@ -480,8 +478,6 @@
             yextent = yaxis2 - yaxis1;
           if (rupy !== 0) {
               var changey, dragy_factor, new_range;
-              // changey = 1 + (rupy / downy - 1) * (yextent/(downy-yaxis2));
-              // new_range = [yaxis1 + (yextent * changey), yaxis1];
               dragy_factor = yextent/downy;
               changey = 1 - (rupy / downy - 1) * (yextent/(downy-yaxis1))/dragy_factor;
               new_range = [yaxis1 + (yextent * changey), yaxis1];
