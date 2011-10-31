@@ -304,7 +304,6 @@ function displayStats() {
 step_model.onchange = modelController;
 model.renderFolderCanvas();
 
-
 function runModelStep() {
     last_step_time = +new Date(step_time);
     model.nextStep();

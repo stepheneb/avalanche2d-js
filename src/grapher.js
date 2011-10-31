@@ -71,7 +71,7 @@
     };
 
     var gcanvas, gctx, cplot = {},
-        chart = document.getElementById("chart"),
+      chart = document.getElementById("chart"),
       cx = chart.clientWidth,
       cy = chart.clientHeight,
       padding = {
@@ -451,7 +451,7 @@
     // axis scaling
     //
     // attach the mousemove and mouseup to the body
-    // in case one wonders off the axis line
+    // in case one wanders off the axis line
     d3.select('body')
       .on("mousemove", function(d) {
         var p = d3.svg.mouse(vis[0][0]);
