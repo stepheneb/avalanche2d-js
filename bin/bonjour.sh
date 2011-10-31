@@ -31,7 +31,7 @@
 #
 #    Listen 9292
 #
-# After starting on my compoter the page is served at this url:
+# After starting on my computer the page is served at this url:
 #
 #   http://stepheneb.local.:9292/
 #
