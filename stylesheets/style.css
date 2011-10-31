@@ -56,6 +56,15 @@ fieldset {
   height: 2.5em;
 }
 
+#patchesCanvas { 
+  width:400px;
+  height:400px;
+  padding:0px;
+  background-color:#D3D3D3;
+  color:gray;
+  border: solid 1px #cccccc
+}
+
 #chart {
   background-color: #f7f2c5;
   width: 560px;
