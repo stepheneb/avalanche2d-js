@@ -117,6 +117,8 @@
         .append("svg:g")
           .attr("transform", "translate(" + padding.left + "," + padding.top + ")");
 
+    initTouchHandler(vis[0][0]);
+
     var plot = vis.append("svg:rect")
         .attr("width", size.width)
         .attr("height", size.height)
