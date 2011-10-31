@@ -11,7 +11,7 @@
         width:400px;
         height:400px;
         padding:0px;
-        background-color:lightgray;
+        background-color:#D3D3D3;
         color:gray;
         border: solid 1px #cccccc
       }
@@ -20,13 +20,13 @@
 
     <script type="text/javascript">
       // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-      window.requestAnimFrame = (function() {
+      window.requestAnimFrame = (function () {
         return window.requestAnimationFrame ||
                window.webkitRequestAnimationFrame ||
                window.mozRequestAnimationFrame ||
                window.oRequestAnimationFrame ||
                window.msRequestAnimationFrame ||
-               function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+               function (callback, element) {
                  return window.setTimeout(callback, 1000/60);
                };
       })();
@@ -40,14 +40,13 @@
       })();
       
       // a simple JavaScript source code loader
-      function myRequire(src, callback){
-        var libraries;
+      function myRequire(src, callback) {
+        var libraries, script = document.createElement("script"); 
         if (src.constructor === Array) {
           libraries = src;
         } else {
           libraries = [src];
         }
-        var script = document.createElement("script"); 
         script.type = "text/javascript";
         // IE
         var ie = false;
@@ -127,10 +126,9 @@
       and smartphone systems.
     </p>
     <p>
-      The initial array of desks with folders consists of 100x100 cells. A yellow cell 
-      indicates two folders on the desk, a blue cell is zero, green one, and red three 
-      folders. The model will automatically stop after 5000 model steps if you leave it 
-      running.
+      The initial array of desks with folders consists of 100x100 cells. A yellow cell indicates
+      two folders on the desk, a blue cell is zero, green one, and red three folders. The 100x100
+      model will automatically stop after 5000 model steps if you leave it running.
     </p>
   </div>
   <div id="content">

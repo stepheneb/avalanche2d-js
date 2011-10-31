@@ -4,12 +4,12 @@
 //     avalanche2d.js may be freely distributed under the LGPL license.
 
 /*global 
-  window, document navigator
-  requestAnimFrame cancelRequestAnimFrame myRequire
-  avalanche2d grapher sprintf
-  Float64Array Float32Array
-  Int32Array Int16Array Int8Array
-  Uint32Array Uint16Array Uint8Array
+  window, document, navigator,
+  requestAnimFrame, cancelRequestAnimFrame, myRequire,
+  avalanche2d, grapher, sprintf,
+  Float64Array, Float32Array,
+  Int32Array, Int16Array, Int8Array,
+  Uint32Array, Uint16Array, Uint8Array
 */
 
 (function() {
@@ -116,12 +116,12 @@ avalanche2d.Model.prototype.putCanvas = function() {
 };
 
 avalanche2d.Model.prototype.renderFolderCanvas = function() {
-    var folder_count, pix_index, ycols, x, y;
-    var folder = this.folder;
-    var nx = this.nx;
-    var ny = this.ny;
-    var pixel_data = this.pd;
-    var folder_hue_map = this.folder_hue_map;
+    var folder_count, pix_index, ycols, x, y,
+        folder = this.folder,
+        nx = this.nx,
+        ny = this.ny,
+        pixel_data = this.pd,
+        folder_hue_map = this.folder_hue_map;
     for (y = 0; y < ny; y++) {
         ycols = y * ny;
         pix_index = ycols * 4;
@@ -139,10 +139,10 @@ avalanche2d.Model.prototype.renderFolderCanvas = function() {
 };
 
 avalanche2d.Model.prototype.initialiseAlphaPixels = function() {
-    var alpha_index, x, y, ycols;
-    var nx = this.nx;
-    var ny = this.ny;
-    var pixel_data = this.pd;
+    var alpha_index, x, y, ycols,
+        nx = this.nx,
+        ny = this.ny,
+        pixel_data = this.pd;
     for (y = 0; y < ny; y++) {
         ycols = y * ny;
         alpha_index = ycols * 4 + 3;
@@ -158,12 +158,12 @@ avalanche2d.Model.prototype.initialiseAlphaPixels = function() {
 //
 
 avalanche2d.Model.prototype.renderFolderTable = function(destination) {
-    var folder_count, x, y;
-    var columns = this.nx;
-    var rows = this.ny;
-    var ycols, ycols_plus_x;
-    var folder = this.folder;
-    var table_strings = ["    "];
+    var folder_count, x, y,
+        columns = this.nx,
+        rows = this.ny,
+        ycols, ycols_plus_x,
+        folder = this.folder,
+        table_strings = ["    "];
     for (y = 0; y < rows; y++) {
       table_strings[table_strings.length] = sprintf("%2.0f ", y);
     }
@@ -228,18 +228,12 @@ avalanche2d.FolderSolver2D.prototype.add = function(xpos, ypos, index) {
 };
 
 avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, index) {
-    var folder = this.model.folder;
-    var size = this.model.ARRAY_SIZE;
-    
-    var nx = this.nx;
-    var nx_minus_one = nx - 1;
-
-    var ny = this.ny;
-    var ny_minus_one = ny - 1;
-    
-    var index_plus_x, index_minus_x, index_plus_y, index_minus_y;
-    
-    var caused_avalanche = false;
+    var folder = this.model.folder,
+        size = this.model.ARRAY_SIZE,
+        nx = this.nx,
+        nx_minus_one = nx - 1,
+        index_plus_x, index_minus_x, index_plus_y, index_minus_y,
+        caused_avalanche = false;
     
     // if we're not on the left edge increment the neighbor to the left
     if (xpos > 0) {
@@ -285,20 +279,14 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
 
 avalanche2d.FolderSolver2D.prototype.distributeFoldersRandomOrder = function(xpos, ypos, index) {
     // Currently about 50% slower than the non-random distributeFolders() function
-    var folder = this.model.folder;
-    var size = this.model.ARRAY_SIZE;
-    
-    var nx = this.nx;
-    var nx_minus_one = nx - 1;
-
-    var ny = this.ny;
-    var ny_minus_one = ny - 1;
-    
-    var neighbors = [];
-    
-    var caused_avalanche = false;
-    
-    var cell;
+    var folder = this.model.folder,
+        size = this.model.ARRAY_SIZE,
+        nx = this.nx,
+        nx_minus_one = nx - 1,
+        neighbors = [],
+        caused_avalanche = false,
+        cell, cindex,
+        index_plus_y = index + nx;
     
     // if we're not on the left edge queue the neighbor to the left
     if (xpos > 0) { neighbors.push([xpos-1, ypos, index-1]); }
@@ -310,14 +298,11 @@ avalanche2d.FolderSolver2D.prototype.distributeFoldersRandomOrder = function(xpo
     if (index >= nx) { neighbors.push([xpos, ypos-1, index-nx]); }
 
     // if there is a row below queue the neighbor below
-    var index_plus_y = index + nx;
     if (index_plus_y < size) { neighbors.push([xpos, ypos+1, index_plus_y]); }
 
     // randomize the order in which we process the neighbors
     neighbors.shuffle();
-    
-    var cindex;
-    
+
     while (neighbors.length > 0) {
         cell = neighbors.shift();
         cindex = cell[2];
@@ -331,10 +316,10 @@ avalanche2d.FolderSolver2D.prototype.distributeFoldersRandomOrder = function(xpo
 };
 
 avalanche2d.FolderSolver2D.prototype.step = function() {
-    var cell;
-    var folder = this.model.folder;
-    var folder_count;
-    var relaxation_cycles = 0;
+    var cell,
+        folder = this.model.folder,
+        folder_count,
+        relaxation_cycles = 0;
     while (this.new_cells_to_process.length > 0) {
         relaxation_cycles++;
         // if (relaxation_cycles > 4) return this.finish_with_brute_force();
@@ -352,19 +337,18 @@ avalanche2d.FolderSolver2D.prototype.step = function() {
 };
 
 avalanche2d.FolderSolver2D.prototype.finish_with_brute_force = function() {
-    var folder = this.model.folder;
-    var nx = this.nx;
-    var ny = this.ny;
-    var xpos, ypos, index;
-    var folder_count;
-    
+    var folder = this.model.folder,
+        nx = this.nx,
+        ny = this.ny,
+        xpos, ypos, index,
+        folder_count,
+        avalanche = true,
+        new_avalanche = true,
+        row_index = 0;
+
     this.cells_to_process = [];
     this.new_cells_to_process = [];
     
-    var avalanche = true;
-    var new_avalanche = true;
-
-    var row_index = 0;
     while (avalanche) {
         avalanche = false;
         for (ypos = 0; ypos < ny; ypos++) {
@@ -390,8 +374,9 @@ avalanche2d.FolderSolver2D.prototype.finish_with_brute_force = function() {
 // Extend the Array object with a shuffle method
 
 Array.prototype.shuffle = function() {
-    var i, r, temp;
-    var s = this, len = s.length; 
+    var i, r, temp,
+        s = this, 
+        len = s.length; 
     for(i = len-1; i > 0; i--) {
         r = Math.floor(Math.random()*(i+1));
         temp = s[i];
@@ -442,9 +427,7 @@ function createArray(size, fill) {
 }
 
 function copyArray (destination, source) {
-    var i;
-    var source_length = source.length;
-    var destination_length = destination.length;
+    var i, source_length = source.length;
     for (i = 0; i < source_length; i++) { destination[i] = source[i]; }
 }
 
@@ -466,9 +449,9 @@ function getMin (array) {
 
 // FloatxxArray[] array
 function getMaxTypedArray (array) {
-    var test, i;
-    var max = Number.MIN_VALUE;
-    var length = array.length;
+    var test, i,
+        max = Number.MIN_VALUE,
+        length = array.length;
     for(i = 0; i < length; i++) {
         test = array[i];
         max = test > max ? test : max;
@@ -478,9 +461,9 @@ function getMaxTypedArray (array) {
 
 // FloatxxArray[] array
 function getMinTypedArray (array) {
-    var test, i;
-    var min = Number.MAX_VALUE;
-    var length = array.length;
+    var test, i,
+        min = Number.MAX_VALUE,
+        length = array.length;
     for(i = 0; i < length; i++) {
         test = array[i];
         min = test < min ? test : min;
@@ -495,9 +478,9 @@ function getMaxAnyArray (array) {
     }
     catch (e) {
         if (e instanceof TypeError) {
-            var test, i;
-            var max = Number.MIN_VALUE;
-            var length = array.length;
+            var test, i,
+                max = Number.MIN_VALUE,
+                length = array.length;
             for(i = 0; i < length; i++) {
                 test = array[i];
                 max = test > max ? test : max;
@@ -514,9 +497,9 @@ function getMinAnyArray (array) {
     }
     catch (e) {
         if (e instanceof TypeError) {
-            var test, i;
-            var min = Number.MAX_VALUE;
-            var length = array.length;
+            var test, i,
+               min = Number.MAX_VALUE,
+               length = array.length;
             for(i = 0; i < length; i++) {
                 test = array[i];
                 min = test < min ? test : min;
@@ -527,9 +510,8 @@ function getMinAnyArray (array) {
 }
 
 function getAverage (array) {
-    var i;
-    var acc = 0;
-    var length = array.length;
+    var i, acc = 0,
+        length = array.length;
     for (i = 0; i < length; i++) {
         acc += array[i];
     }
@@ -549,9 +531,8 @@ function getAverage (array) {
 *
 */
 function hsvToRgb(h, s, v) {
-    var r, g, b;
-    var i;
-    var f, p, q, t;
+    var r, g, b, i,
+        f, p, q, t;
 
     // Make sure our arguments stay in-range
     h = Math.max(0, Math.min(360, h));
@@ -617,10 +598,11 @@ function hsvToRgb(h, s, v) {
 
     return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 }
-var red_color_table   = [];
-var blue_color_table  = [];
-var green_color_table = [];
-var alpha_color_table = [];
+
+var red_color_table   = [],
+    blue_color_table  = [],
+    green_color_table = [],
+    alpha_color_table = [];
 
 function setupRGBAColorTables () {
     var i, rgb = [];

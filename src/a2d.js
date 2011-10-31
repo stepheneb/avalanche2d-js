@@ -1,7 +1,7 @@
 /*global 
-  window, document navigator 
-  requestAnimFrame cancelRequestAnimFrame myRequire
-  avalanche2d grapher sprintf 
+  window, document, navigator, 
+  requestAnimFrame, cancelRequestAnimFrame ,myRequire,
+  avalanche2d, grapher, sprintf 
 */
 
 var webgl = !!window.WebGLRenderingContext;

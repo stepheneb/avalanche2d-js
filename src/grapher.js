@@ -1,7 +1,7 @@
 /*global 
-  window, document navigator 
-  requestAnimFrame cancelRequestAnimFrame myRequire
-  avalanche2d grapher sprintf d3
+  window, document, navigator, 
+  requestAnimFrame, cancelRequestAnimFrame, myRequire,
+  avalanche2d, grapher, sprintf, d3,
   graph
 */
 
@@ -70,10 +70,8 @@
       clear_canvas();
     };
 
-    var gcanvas, gctx, cplot = {};
-    
-    
-    var chart = document.getElementById("chart"),
+    var gcanvas, gctx, cplot = {},
+        chart = document.getElementById("chart"),
       cx = chart.clientWidth,
       cy = chart.clientHeight,
       padding = {
