@@ -57,13 +57,18 @@ avalanche2d.Model.prototype.random_cell = function() {
 avalanche2d.Model.prototype.reset = function() {
     this.indexOfStep = 0;
 
-    this.folder = createArray(this.ARRAY_SIZE, this.options.model.initial_value);
-
     this.averageFolders = this.options.model.initial_value;
     
     this.setupCanvas();
 
     this.folderSolver = new avalanche2d.FolderSolver2D(this);
+    this.folder = createArray(this.ARRAY_SIZE, this.options.model.initial_value);
+    for (y = 0; y < this.ny; y++) {
+        for (x = 0; x < this.nx; x++) {
+	    this.folderSolver.setFolderCount(x, y, this.options.model.initial_value);
+        }
+    }
+
 };
 
 
@@ -105,37 +110,12 @@ avalanche2d.Model.prototype.setupCanvas = function() {
       //   3       orange     30
       //   4       red        0
       //
-      this.folder_hue_map = [183, 115, 59, 30, 0, 0, 0, 0, 0];
-
       this.renderFolderCanvas();
     }
 };
 
-avalanche2d.Model.prototype.putCanvas = function() {
-  this.ctx.putImageData(this.imageData, 0, 0);
-};
-
 avalanche2d.Model.prototype.renderFolderCanvas = function() {
-    var folder_count, pix_index, ycols, x, y,
-        folder = this.folder,
-        nx = this.nx,
-        ny = this.ny,
-        pixel_data = this.pd,
-        folder_hue_map = this.folder_hue_map;
-    for (y = 0; y < ny; y++) {
-        ycols = y * ny;
-        pix_index = ycols * 4;
-        for (x = 0; x < nx; x++) {
-            folder_count = folder[ycols + x];
-            hue =  (folder_count > 4) ? 0 : folder_hue_map[folder_count];
-            pixel_data[pix_index]   = red_color_table[hue];
-            pixel_data[pix_index+1] = blue_color_table[hue];
-            pixel_data[pix_index+2] = green_color_table[hue];
-            pixel_data[pix_index+3] = 255;
-            pix_index += 4;
-        }
-    }
-    this.putCanvas();
+    this.ctx.putImageData(this.imageData, 0, 0);
 };
 
 avalanche2d.Model.prototype.initialiseAlphaPixels = function() {
@@ -196,7 +176,19 @@ avalanche2d.FolderSolver2D = function(model) {
     
     this.cells_to_process = [];
     this.new_cells_to_process = [];
+ 
+    this.folder_hue_map = [183, 115, 59, 30, 0, 0, 0, 0, 0];
 
+};
+
+avalanche2d.FolderSolver2D.prototype.setFolderCount = function(x, y, folder_count) {
+    var index = x + y * this.ny;
+    this.model.folder[index] = folder_count;
+    var hue = (folder_count > 4) ? 0 : this.folder_hue_map[folder_count];
+    this.model.pd[index * 4]   = red_color_table[hue];
+    this.model.pd[index * 4 + 1] = blue_color_table[hue];
+    this.model.pd[index * 4 + 2] = green_color_table[hue];
+    this.model.pd[index * 4 + 3] = 255;
 };
 
 avalanche2d.FolderSolver2D.prototype.solve = function() {
@@ -216,13 +208,11 @@ avalanche2d.FolderSolver2D.prototype.drop = function() {
 avalanche2d.FolderSolver2D.prototype.add = function(xpos, ypos, index) {
     index = index || ypos * this.model.nx + xpos;
     var folder_count = this.model.folder[index];
-    folder_count++;
-    if (folder_count > 3) {
-        folder_count = folder_count - 4;
-        this.model.folder[index] = folder_count;
+    if (folder_count > 2) {
+        this.setFolderCount(xpos, ypos, folder_count - 3);
         return this.distributeFolders(xpos, ypos, index);
     } else {
-        this.model.folder[index] = folder_count;
+        this.setFolderCount(xpos, ypos, folder_count + 1);
         return false;
     }
 };
@@ -238,7 +228,7 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
     // if we're not on the left edge increment the neighbor to the left
     if (xpos > 0) {
         index_minus_x = index - 1;
-        folder[index_minus_x]++;
+        this.setFolderCount(xpos - 1, ypos, folder[index_minus_x] + 1);
         if (folder[index_minus_x] > 3) {
             this.new_cells_to_process.push([xpos-1, ypos, index_minus_x]);
             caused_avalanche = true;
@@ -248,7 +238,7 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
     // if we're not on the right edge increment the neighbor to the right
     if (xpos < nx_minus_one) {
         index_plus_x  = index + 1;
-        folder[index_plus_x]++;
+        this.setFolderCount(xpos + 1, ypos, folder[index_plus_x] + 1);
         if (folder[index_plus_x] > 3) {
             this.new_cells_to_process.push([xpos+1, ypos, index_plus_x]);
             caused_avalanche = true;
@@ -258,7 +248,7 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
     // if there is a row above increment the neighbor above
     if (index >= nx)  {
         index_minus_y = index - nx;
-        folder[index_minus_y]++;
+        this.setFolderCount(xpos, ypos - 1, folder[index_minus_y] + 1);
         if (folder[index_minus_y] > 3) {
             this.new_cells_to_process.push([xpos, ypos-1, index_minus_y]);
             caused_avalanche = true;
@@ -268,7 +258,7 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
     // if there is a row below increment the neighbor below
     index_plus_y = index + nx;
     if (index_plus_y < size) {
-        folder[index_plus_y]++;
+        this.setFolderCount(xpos, ypos + 1, folder[index_plus_y] + 1);
         if (folder[index_plus_y] > 3) {
             this.new_cells_to_process.push([xpos, ypos+1, index_plus_y]);
             caused_avalanche = true;
@@ -277,6 +267,7 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
     return caused_avalanche;
 };
 
+// NOTE: Not updated to use setFolderCount(), since not currently used - ST 11/1/11
 avalanche2d.FolderSolver2D.prototype.distributeFoldersRandomOrder = function(xpos, ypos, index) {
     // Currently about 50% slower than the non-random distributeFolders() function
     var folder = this.model.folder,
