@@ -63,10 +63,8 @@ avalanche2d.Model.prototype.reset = function() {
 
     this.folderSolver = new avalanche2d.FolderSolver2D(this);
     this.folder = createArray(this.ARRAY_SIZE, this.options.model.initial_value);
-    for (y = 0; y < this.ny; y++) {
-        for (x = 0; x < this.nx; x++) {
-	    this.folderSolver.setFolderCount(x, y, this.options.model.initial_value);
-        }
+    for (i = 0; i < this.ARRAY_SIZE; i++) {
+	this.folderSolver.setFolderCount(i, this.options.model.initial_value);
     }
 
 };
@@ -181,14 +179,14 @@ avalanche2d.FolderSolver2D = function(model) {
 
 };
 
-avalanche2d.FolderSolver2D.prototype.setFolderCount = function(x, y, folder_count) {
-    var index = x + y * this.ny;
+avalanche2d.FolderSolver2D.prototype.setFolderCount = function(index, folder_count) {
     this.model.folder[index] = folder_count;
-    var hue = (folder_count > 4) ? 0 : this.folder_hue_map[folder_count];
-    this.model.pd[index * 4]   = red_color_table[hue];
-    this.model.pd[index * 4 + 1] = blue_color_table[hue];
-    this.model.pd[index * 4 + 2] = green_color_table[hue];
-    this.model.pd[index * 4 + 3] = 255;
+    hue = (folder_count > 4) ? 0 : this.folder_hue_map[folder_count];
+    pix = this.model.pd;
+    pix[index * 4]   = red_color_table[hue];
+    pix[index * 4 + 1] = blue_color_table[hue];
+    pix[index * 4 + 2] = green_color_table[hue];
+    pix[index * 4 + 3] = 255;
 };
 
 avalanche2d.FolderSolver2D.prototype.solve = function() {
@@ -209,10 +207,10 @@ avalanche2d.FolderSolver2D.prototype.add = function(xpos, ypos, index) {
     index = index || ypos * this.model.nx + xpos;
     var folder_count = this.model.folder[index];
     if (folder_count > 2) {
-        this.setFolderCount(xpos, ypos, folder_count - 3);
+        this.setFolderCount(index, folder_count - 3);
         return this.distributeFolders(xpos, ypos, index);
     } else {
-        this.setFolderCount(xpos, ypos, folder_count + 1);
+        this.setFolderCount(index, folder_count + 1);
         return false;
     }
 };
@@ -228,7 +226,7 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
     // if we're not on the left edge increment the neighbor to the left
     if (xpos > 0) {
         index_minus_x = index - 1;
-        this.setFolderCount(xpos - 1, ypos, folder[index_minus_x] + 1);
+        this.setFolderCount(index_minus_x, folder[index_minus_x] + 1);
         if (folder[index_minus_x] > 3) {
             this.new_cells_to_process.push([xpos-1, ypos, index_minus_x]);
             caused_avalanche = true;
@@ -238,7 +236,7 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
     // if we're not on the right edge increment the neighbor to the right
     if (xpos < nx_minus_one) {
         index_plus_x  = index + 1;
-        this.setFolderCount(xpos + 1, ypos, folder[index_plus_x] + 1);
+        this.setFolderCount(index_plus_x, folder[index_plus_x] + 1);
         if (folder[index_plus_x] > 3) {
             this.new_cells_to_process.push([xpos+1, ypos, index_plus_x]);
             caused_avalanche = true;
@@ -248,7 +246,7 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
     // if there is a row above increment the neighbor above
     if (index >= nx)  {
         index_minus_y = index - nx;
-        this.setFolderCount(xpos, ypos - 1, folder[index_minus_y] + 1);
+        this.setFolderCount(index_minus_y, folder[index_minus_y] + 1);
         if (folder[index_minus_y] > 3) {
             this.new_cells_to_process.push([xpos, ypos-1, index_minus_y]);
             caused_avalanche = true;
@@ -258,7 +256,7 @@ avalanche2d.FolderSolver2D.prototype.distributeFolders = function(xpos, ypos, in
     // if there is a row below increment the neighbor below
     index_plus_y = index + nx;
     if (index_plus_y < size) {
-        this.setFolderCount(xpos, ypos + 1, folder[index_plus_y] + 1);
+        this.setFolderCount(index_plus_y, folder[index_plus_y] + 1);
         if (folder[index_plus_y] > 3) {
             this.new_cells_to_process.push([xpos, ypos+1, index_plus_y]);
             caused_avalanche = true;
