@@ -54,7 +54,8 @@ var graph = grapher.graph({
   "xmin": 0, "xmax": 5000,
   "ylabel": null,
   "ymin": 2.0, "ymax": 2.2,
-  "dataset": graph_data
+  "dataset": graph_data,
+  "container": document.getElementById("chart")
 });
 
 //

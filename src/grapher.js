@@ -20,6 +20,8 @@
   grapher.graph = function(options) {
 
     graph = {};
+    
+    graph.container = options.container || document.getElementById("chart");
 
     graph.dataset = options.dataset || [0];
 
@@ -71,7 +73,7 @@
     };
 
     var gcanvas, gctx, cplot = {},
-      chart = document.getElementById("chart"),
+      chart = graph.container,
       cx = chart.clientWidth,
       cy = chart.clientHeight,
       padding = {
