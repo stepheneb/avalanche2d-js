@@ -41,9 +41,7 @@
     };
 
     graph.change_xaxis = function(xmax) {
-      x = d3.scale.linear()
-          .domain([0, xmax])
-          .range([0, mw]);
+      x = domain([0, xmax]).range([0, mw]);
       update();
       redraw();
     };
@@ -91,8 +89,9 @@
       tx = function(d) { return "translate(" + x(d) + ",0)"; },
       ty = function(d) { return "translate(0," + y(d) + ")"; },
       stroke = function(d) { return d ? "#ccc" : "#666"; },
+      points = [],
       points = indexedData(graph.dataset, 0);
-      
+
       var x = d3.scale.linear()
           .domain([graph.xmin, graph.xmax])
           .range([0, mw]),
@@ -111,7 +110,7 @@
       downy = Math.NaN,
       dragged = null,
       selected = points[0];
- 
+
     var vis = d3.select("#chart").append("svg:svg")
         .attr("width", cx)
         .attr("height", cy)
@@ -432,18 +431,23 @@
                downscaley = y.copy();
                // d3.behavior.zoom().off("zoom", redraw);
           });
- 
+
       gy.exit().remove();
 
       update();
     }
-    
+
     function indexedData(dataset, initial_index) {
       var i = 0,
           start_index = initial_index || 0,
           n = dataset.length,
-          points = [];
-      for (i = 0; i < n;  i++) {
+          pn = points.length;
+      for (i = 0; i < pn;  i++) {
+        points[i].x = i+start_index;
+        points[i].y = dataset[i];
+        points.push({ x: i+start_index, y: dataset[i] });
+      }
+      for (; i < n;  i++) {
         points.push({ x: i+start_index, y: dataset[i] });
       }
       return points;
